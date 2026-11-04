@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "policy": {
+    "passing_plan": "no denials",
+    "public_workgroup": "rejected by no_public_resources",
+    "opa_version": "1.17.0"
+  },
+  "oscal": {
+    "components": 4,
+    "schema": "valid"
+  },
+  "secret_scan": {
+    "findings": 0,
+    "gitleaks_version": "8.30.1"
+  }
+}

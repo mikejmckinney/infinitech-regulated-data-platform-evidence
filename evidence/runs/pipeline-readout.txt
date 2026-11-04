@@ -1,0 +1,16 @@
+Step Functions readout for irdp-demo-sfn-pipeline: runs started after 2026-11-03T22:40:09+00:00 (generated 2026-11-04T01:41:46+00:00)
+
+Runs: 19 (RUNNING 1, SUCCEEDED 18)
+Not drilled: 17 of 18 succeeded (decision rule 1)
+Drilled: 3f6aea6e-78ee-410a-a482-19a05de5cfdb SUCCEEDED, 3 task(s) stopped, 1 redrive(s) (decision rule 3)
+Overlapping runs: 0
+Task attempts: 59, 58 with a stopped task to time
+  Time to start (created to running): mean 20.2 s, max 31.1 s
+  Time running: mean 22.6 s, max 113.0 s
+  Billed (image pull to stop, 60 s minimum; decision rule 4): mean 70.0 s, max 143 s
+State transitions: 59 (1.0 a task attempt)
+Fargate: $0.0264, $0.0014 a run, at $0.04048 a vCPU-hour and $0.004445 a GB-hour
+Redshift loads that copied files: 2; mean/max seconds: lock 0.3/0.4, lake 0.2/0.2, loaded_files 1.6/1.6, copy 66.9/70.1, merge 24.2/37.8, deletes 1.9/2.1, unlock 0.2/0.2
+  4.0 statements a load, 94.4/110.9 s polled, 84.7/103.8 s in Redshift
+Redshift loads with nothing new: 16; mean/max seconds: lock 2.6/36.0, lake 0.2/0.3, loaded_files 6.4/23.2, copy 0.0/0.0, merge 26.2/79.0, deletes 1.8/2.6, unlock 0.2/0.3
+  3.0 statements a load, 34.2/85.1 s polled, 29.1/81.2 s in Redshift

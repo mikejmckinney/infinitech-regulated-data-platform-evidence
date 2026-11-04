@@ -1,0 +1,61 @@
+{
+  "schema": "irdp.failover-drill/v1",
+  "primary_region": "us-east-1",
+  "standby_region": "us-west-2",
+  "warm": {
+    "recovered": true,
+    "run": {
+      "status": "SUCCEEDED",
+      "started_at": "2026-11-04T00:04:58Z",
+      "ended_at": "2026-11-04T00:07:01Z"
+    },
+    "rto_seconds": 127.3,
+    "rpo_seconds": 0.0,
+    "files": {
+      "primary": 2,
+      "loaded": 2,
+      "lost": []
+    },
+    "events": 99000,
+    "replication": {
+      "all_replicated": true,
+      "seen_by_seconds": 4.9
+    }
+  },
+  "cold": {
+    "recovered": true,
+    "backup": {
+      "kind": "snapshot",
+      "id": "copy:irdp-drill-1793749449",
+      "arn": "arn:aws:redshift-serverless:us-west-2:redacted:snapshot/278d7024-5ea8-481b-8554-b9997d9b2dbf",
+      "created_at": "2026-11-03T23:44:09Z",
+      "time_from": "name",
+      "of_primary": true
+    },
+    "skipped": [],
+    "restore_started_at": "2026-11-04T00:07:16Z",
+    "statuses_seen": [
+      "AVAILABLE",
+      "MODIFYING"
+    ],
+    "target_was_fresh": true,
+    "rpo_seconds": 1245.0,
+    "events": 99000,
+    "evidence": "status transition",
+    "restore_seconds": 350.2,
+    "rto_seconds": 492.2,
+    "rto_is_upper_bound": false
+  },
+  "error": null,
+  "schedule_disabled_at": "2026-11-04T00:03:50Z",
+  "t_fail": "2026-11-04T00:04:54Z",
+  "primary_events": 99000,
+  "schedule_restored_at": "2026-11-04T00:07:18Z",
+  "snapshot_cleanup": {
+    "deleted": [
+      "us-east-1:irdp-drill-1793749449",
+      "us-west-2:copy:irdp-drill-1793749449"
+    ],
+    "failed": []
+  }
+}

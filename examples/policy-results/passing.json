@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "scenario": "Redshift Serverless workgroup, public access off",
+  "expected": "allow",
+  "result": "as expected",
+  "resources_checked": [
+    {
+      "address": "module.redshift.aws_redshiftserverless_namespace.this",
+      "type": "aws_redshiftserverless_namespace"
+    },
+    {
+      "address": "module.redshift.aws_redshiftserverless_workgroup.this",
+      "type": "aws_redshiftserverless_workgroup"
+    }
+  ],
+  "denials": []
+}

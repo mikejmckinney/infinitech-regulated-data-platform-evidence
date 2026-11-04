@@ -1,0 +1,182 @@
+{
+  "component-definition": {
+    "uuid": "cde25923-c457-5dd6-a09c-663beb88581b",
+    "metadata": {
+      "title": "IRDP component definition: Amazon Data Firehose stream into the lake's landing bucket",
+      "last-modified": "2026-10-28T15:48:59Z",
+      "version": "sha256-523230cac1343dd5",
+      "oscal-version": "1.2.3",
+      "props": [
+        {
+          "name": "provenance",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "Infinitech-productized"
+        },
+        {
+          "name": "partition",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "aws"
+        }
+      ],
+      "roles": [
+        {
+          "id": "provider",
+          "title": "Provider"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "38292134-d6e8-5d6c-99f1-3c8ae99f8825",
+          "type": "organization",
+          "name": "Infinitech"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "ffcefd27-8fdc-5d06-8bd7-f252996e7656",
+        "type": "service",
+        "title": "Amazon Data Firehose stream into the lake's landing bucket",
+        "description": "A Firehose Direct PUT stream that buffers producers' records under a customer-managed key and writes them into the lake's landing bucket under the pipeline's date prefix, with a delivery role limited to that bucket's delivery and error prefixes and a producer policy limited to this stream.",
+        "purpose": "Ingests message feeds into the landing bucket without a Kafka cluster.",
+        "props": [
+          {
+            "name": "pattern-provenance",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "Infinitech-productized"
+          },
+          {
+            "name": "terraform-module",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "modules/streaming/firehose-landing"
+          }
+        ],
+        "links": [
+          {
+            "href": "modules/streaming/firehose-landing",
+            "rel": "reference",
+            "text": "Terraform module"
+          }
+        ],
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "38292134-d6e8-5d6c-99f1-3c8ae99f8825"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "55fc4aea-10c7-522c-9e36-6a2e6a0da1ea",
+            "source": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.6.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+            "description": "How the Amazon Data Firehose stream into the lake's landing bucket component implements NIST SP 800-53 Rev. 5.2.0 controls.",
+            "implemented-requirements": [
+              {
+                "uuid": "93386b7a-d80c-53f7-917b-2774298ea52c",
+                "control-id": "sc-28.1",
+                "description": "Firehose encrypts buffered records with the customer-managed key passed in (the restricted classification key in the reference), and every delivered object names that key, which the landing bucket's policy requires.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Cryptographic Protection"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/streaming/firehose-landing/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/streaming/firehose-landing/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/streaming/firehose-landing/tests/firehose.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "9f1f5af2-57c3-51c9-a64a-de469a8e837e",
+                "control-id": "ac-6",
+                "description": "Producers may only put records on this stream, and use its key only through Firehose. The delivery role may write only the delivery and error prefixes of the landing bucket, and use the bucket's key only through S3 for that bucket.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Least Privilege"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/streaming/firehose-landing/producer-policy.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/streaming/firehose-landing/tests/firehose.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/streaming/firehose-landing/tests/firehose.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "20d2b675-d8a6-5fd8-8792-ea8a71d972fb",
+                "control-id": "ia-9",
+                "description": "Only the Firehose service, acting for this account, may assume the delivery role: its trust policy requires the account ID as the external ID.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Service Identification and Authentication"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/streaming/firehose-landing/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "2edb7534-f886-5f99-bc7e-89edb646bdbd",
+                "control-id": "au-12",
+                "description": "Delivery errors go to CloudWatch Logs, on the confidential key.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Audit Record Generation"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/streaming/firehose-landing/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/streaming/firehose-landing/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

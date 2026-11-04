@@ -1,0 +1,235 @@
+{
+  "component-definition": {
+    "uuid": "a477610c-8e7b-59bd-b23a-ad6cc9833397",
+    "metadata": {
+      "title": "IRDP component definition: S3 tiered data lake encrypted with classification keys",
+      "last-modified": "2026-10-25T02:18:28Z",
+      "version": "sha256-9641d93359161636",
+      "oscal-version": "1.2.3",
+      "props": [
+        {
+          "name": "provenance",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "Infinitech-productized"
+        },
+        {
+          "name": "partition",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "aws"
+        }
+      ],
+      "roles": [
+        {
+          "id": "provider",
+          "title": "Provider"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "38292134-d6e8-5d6c-99f1-3c8ae99f8825",
+          "type": "organization",
+          "name": "Infinitech"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "10e5bede-53c1-5243-924b-d83be19aae4e",
+        "type": "service",
+        "title": "S3 tiered data lake encrypted with classification keys",
+        "description": "Landing, curated, quarantine, and logs buckets plus an access-logs bucket, each encrypted with its classification's KMS key, with storage tiering and retention per bucket and IAM policies per consumer role.",
+        "purpose": "Durable storage for raw and curated pipeline data and Airflow task logs.",
+        "props": [
+          {
+            "name": "pattern-provenance",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "Infinitech-productized"
+          },
+          {
+            "name": "terraform-module",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "modules/storage/s3-tiered-lake"
+          }
+        ],
+        "links": [
+          {
+            "href": "modules/storage/s3-tiered-lake",
+            "rel": "reference",
+            "text": "Terraform module"
+          }
+        ],
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "38292134-d6e8-5d6c-99f1-3c8ae99f8825"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "afd6fe2c-6bbf-51f4-b7cb-59a5f1dbed12",
+            "source": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.6.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+            "description": "How the S3 tiered data lake encrypted with classification keys component implements NIST SP 800-53 Rev. 5.2.0 controls.",
+            "implemented-requirements": [
+              {
+                "uuid": "216c9bad-338c-5c9d-aa85-4cfb2e716fac",
+                "control-id": "sc-28.1",
+                "description": "Every data bucket encrypts with SSE-KMS under its classification's customer-managed key, with S3 Bucket Keys. The bucket policy denies uploads that ask for SSE-S3 or name any other KMS key.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Cryptographic Protection"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/tests/lake.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "d113693a-df94-571f-b55c-b1b748d51813",
+                "control-id": "sc-8.1",
+                "description": "Every bucket policy denies any request made without TLS (aws:SecureTransport false).",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Cryptographic Protection"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "34c813e4-a4c0-517a-8985-c13ab1178c40",
+                "control-id": "ac-3",
+                "description": "All four S3 Block Public Access settings are on for every bucket, and object ownership is BucketOwnerEnforced, which turns ACLs off. Access is decided only by IAM and bucket policies.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Access Enforcement"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/tests/lake.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "171308f9-8c9d-5879-ae9b-2727182d2530",
+                "control-id": "ac-6",
+                "description": "Each consumer role (landing writer and reader, curated writer and reader, quarantine writer, logs writer and reader, lake copy reader) gets a policy for only the buckets it uses, with KMS use allowed only through S3.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Least Privilege"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/policy.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/tests/lake.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "85e6500f-fbf0-586a-b255-e526b09b500d",
+                "control-id": "au-12",
+                "description": "Every data bucket sends S3 server access logs to the lake's access-logs bucket.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Audit Record Generation"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "bfe2ec0a-24bc-535e-8ddb-5923862868f8",
+                "control-id": "si-12",
+                "description": "Versioning is on, and each bucket has its own lifecycle: transitions to cheaper storage classes, expiration of current objects where the data has a retention limit, and expiration of old versions.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Information Management and Retention"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/storage/s3-tiered-lake/bucket/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/variables.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/storage/s3-tiered-lake/tests/lake.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1427 @@
+{
+  "schema": "irdp.sfn-readout/v1",
+  "state_machine": "arn:aws:states:us-east-1:redacted:stateMachine:irdp-demo-sfn-pipeline",
+  "after": "2026-11-03T22:40:09+00:00",
+  "generated_at": "2026-11-04T01:41:46+00:00",
+  "prices": {
+    "fargate_vcpu": 0.04048,
+    "fargate_gb": 0.004445,
+    "step_functions_transition": 2.5e-05
+  },
+  "summary": {
+    "runs": 19,
+    "by_status": {
+      "SUCCEEDED": 18,
+      "RUNNING": 1
+    },
+    "undrilled": {
+      "runs": 18,
+      "succeeded": 17
+    },
+    "drilled": [
+      {
+        "name": "3f6aea6e-78ee-410a-a482-19a05de5cfdb",
+        "status": "SUCCEEDED",
+        "redrives": 1,
+        "stopped_tasks": 3
+      }
+    ],
+    "overlapping_runs": 0,
+    "attempts": 59,
+    "tasks_parsed": 58,
+    "start_seconds": {
+      "mean": 20.2,
+      "max": 31.1,
+      "total": 1111.1
+    },
+    "run_seconds": {
+      "mean": 22.6,
+      "max": 113.0,
+      "total": 1240.7
+    },
+    "billed_seconds": {
+      "mean": 70.0,
+      "max": 143,
+      "total": 3852
+    },
+    "transitions": 59,
+    "fargate_cost": 0.0264,
+    "fargate_cost_per_run": 0.0014,
+    "load_outputs": {
+      "read": 18,
+      "missing": 0
+    },
+    "redshift_loads": {
+      "copied": {
+        "loads": 2,
+        "phase_seconds": {
+          "lock": {
+            "mean": 0.3,
+            "max": 0.4,
+            "total": 0.7
+          },
+          "lake": {
+            "mean": 0.2,
+            "max": 0.2,
+            "total": 0.4
+          },
+          "loaded_files": {
+            "mean": 1.6,
+            "max": 1.6,
+            "total": 3.2
+          },
+          "copy": {
+            "mean": 66.9,
+            "max": 70.1,
+            "total": 133.9
+          },
+          "merge": {
+            "mean": 24.2,
+            "max": 37.8,
+            "total": 48.4
+          },
+          "deletes": {
+            "mean": 1.9,
+            "max": 2.1,
+            "total": 3.7
+          },
+          "unlock": {
+            "mean": 0.2,
+            "max": 0.2,
+            "total": 0.4
+          }
+        },
+        "statements": {
+          "mean": 4.0,
+          "max": 4,
+          "total": 8
+        },
+        "statement_seconds": {
+          "mean": 94.4,
+          "max": 110.9,
+          "total": 188.8
+        },
+        "redshift_seconds": {
+          "mean": 84.7,
+          "max": 103.8,
+          "total": 169.3
+        }
+      },
+      "nothing_new": {
+        "loads": 16,
+        "phase_seconds": {
+          "lock": {
+            "mean": 2.6,
+            "max": 36.0,
+            "total": 41.0
+          },
+          "lake": {
+            "mean": 0.2,
+            "max": 0.3,
+            "total": 3.2
+          },
+          "loaded_files": {
+            "mean": 6.4,
+            "max": 23.2,
+            "total": 101.7
+          },
+          "copy": {
+            "mean": 0.0,
+            "max": 0.0,
+            "total": 0.0
+          },
+          "merge": {
+            "mean": 26.2,
+            "max": 79.0,
+            "total": 419.9
+          },
+          "deletes": {
+            "mean": 1.8,
+            "max": 2.6,
+            "total": 28.6
+          },
+          "unlock": {
+            "mean": 0.2,
+            "max": 0.3,
+            "total": 2.8
+          }
+        },
+        "statements": {
+          "mean": 3.0,
+          "max": 3,
+          "total": 48
+        },
+        "statement_seconds": {
+          "mean": 34.2,
+          "max": 85.1,
+          "total": 547.6
+        },
+        "redshift_seconds": {
+          "mean": 29.1,
+          "max": 81.2,
+          "total": 466.2
+        }
+      }
+    }
+  },
+  "unparsed_samples": [],
+  "runs": [
+    {
+      "name": "3f6aea62-c0ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T22:40:42.104000+00:00",
+      "stopped": "2026-11-03T22:45:01.102000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "10ba32b2d1a34ad5bca3519ad58fdab8",
+          "start_seconds": 20.194,
+          "run_seconds": 61.932,
+          "billed_seconds": 97,
+          "cost": 0.0006651236111111111,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "75db308a17b84778bda5c2118adeef35",
+          "start_seconds": 16.294,
+          "run_seconds": 53.889,
+          "billed_seconds": 85,
+          "cost": 0.0005828402777777778,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.7,
+            "phase_seconds": {
+              "lock": 0.1,
+              "lake": 0.1,
+              "loaded_files": 17.9,
+              "copy": 0.0,
+              "merge": 32.8,
+              "deletes": 1.7,
+              "unlock": 0.3
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 52.2,
+              "redshift_seconds": 37.9
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "57533d3da666420dabae4a0149cfcf25",
+          "start_seconds": 15.922,
+          "run_seconds": 10.731,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea65-18ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T22:50:42.335000+00:00",
+      "stopped": "2026-11-03T22:55:00.269000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "1f53f7c196b7409082cf8d0d091645ce",
+          "start_seconds": 27.751,
+          "run_seconds": 22.463,
+          "billed_seconds": 64,
+          "cost": 0.0004388444444444445,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "160ae9a83d5e48d9bc04b2d30799ddcb",
+          "start_seconds": 20.742,
+          "run_seconds": 80.185,
+          "billed_seconds": 110,
+          "cost": 0.000754263888888889,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 1,
+            "rows_loaded": 49500,
+            "rows_merged": 49500,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 2.1,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 63.8,
+              "merge": 10.6,
+              "deletes": 2.1,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 4,
+              "seconds": 77.9,
+              "redshift_seconds": 65.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "b45f66c3021843cbaabe1a1d890c2182",
+          "start_seconds": 16.993,
+          "run_seconds": 10.664,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea67-70ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:00:42.090000+00:00",
+      "stopped": "2026-11-03T23:03:22.715000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "e6bdebb6016f4fc7a378b76d2b041a72",
+          "start_seconds": 21.975,
+          "run_seconds": 1.831,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "c0cc1081de6b4b38ba15d001805a8f35",
+          "start_seconds": 23.251,
+          "run_seconds": 6.527,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.7,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 0.0,
+              "merge": 1.6,
+              "deletes": 1.7,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 4.7,
+              "redshift_seconds": 1.1
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "99447df590354f5b860b41ac72b4093c",
+          "start_seconds": 15.763,
+          "run_seconds": 10.89,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea69-c8ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:10:42.323000+00:00",
+      "stopped": "2026-11-03T23:13:25.931000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "35f68d92638342208dd90ed03f48a233",
+          "start_seconds": 21.606,
+          "run_seconds": 1.862,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "a914038580e248668210a7fe70fc5c2a",
+          "start_seconds": 21.979,
+          "run_seconds": 7.428,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.7,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 1.9,
+              "copy": 0.0,
+              "merge": 1.6,
+              "deletes": 1.7,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 5.0,
+              "redshift_seconds": 0.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "d4ab7e5dce794045bc7e0bfec199381b",
+          "start_seconds": 19.69,
+          "run_seconds": 11.562,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea6c-20ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:20:42.082000+00:00",
+      "stopped": "2026-11-03T23:25:18.535000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "8cf0359afda64a1eb9b3bbd42e50b827",
+          "start_seconds": 16.926,
+          "run_seconds": 22.063,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "f47a1d5075b240b0be1bd408f0072ec1",
+          "start_seconds": 20.219,
+          "run_seconds": 112.955,
+          "billed_seconds": 143,
+          "cost": 0.0009805430555555556,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 1,
+            "rows_loaded": 49500,
+            "rows_merged": 49500,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 70.1,
+              "merge": 37.8,
+              "deletes": 1.6,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 4,
+              "seconds": 110.9,
+              "redshift_seconds": 103.8
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "d6cdede23a19409badfe50a0532d6008",
+          "start_seconds": 16.975,
+          "run_seconds": 10.386,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea6e-78ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:30:42.104000+00:00",
+      "stopped": "2026-11-03T23:37:23.742000+00:00",
+      "redrives": 1,
+      "attempts": 6,
+      "drilled": true,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "failed",
+          "task_id": "3ec709196f24430fb3422077b6f4d075",
+          "start_seconds": null,
+          "run_seconds": null,
+          "billed_seconds": null,
+          "cost": 0.0,
+          "drilled": true
+        },
+        {
+          "state": "Curate",
+          "outcome": "failed",
+          "task_id": "a236ac9c7c774c35a1ae04c681f40360",
+          "start_seconds": null,
+          "run_seconds": null,
+          "billed_seconds": null,
+          "cost": 0.0,
+          "drilled": true
+        },
+        {
+          "state": "Curate",
+          "outcome": "failed",
+          "task_id": "450d6e64919942d1913d56240f67876c",
+          "start_seconds": null,
+          "run_seconds": null,
+          "billed_seconds": null,
+          "cost": 0.0,
+          "drilled": true
+        },
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "3538ec7b06954f369b93e1ff2ad0f171",
+          "start_seconds": 21.874,
+          "run_seconds": 1.823,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "880e9d117924431f89c1cf2788a7d588",
+          "start_seconds": 18.305,
+          "run_seconds": 58.656,
+          "billed_seconds": 90,
+          "cost": 0.000617125,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 23.2,
+              "copy": 0.0,
+              "merge": 30.6,
+              "deletes": 1.6,
+              "unlock": 0.3
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 55.4,
+              "redshift_seconds": 51.0
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "2473357a31c448df8824f19044f4943c",
+          "start_seconds": 18.994,
+          "run_seconds": 10.387,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea70-d0ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:40:42.099000+00:00",
+      "stopped": "2026-11-03T23:44:24.830000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "05e76c171bba4b7dac40746d7ca73824",
+          "start_seconds": 23.016,
+          "run_seconds": 61.851,
+          "billed_seconds": 95,
+          "cost": 0.0006514097222222223,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "40ca6fa0a4b74df1aa3d5edd9c79750c",
+          "start_seconds": 17.693,
+          "run_seconds": 9.74,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 2.5,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 2.6,
+              "copy": 0.0,
+              "merge": 2.4,
+              "deletes": 2.5,
+              "unlock": 0.3
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 7.2,
+              "redshift_seconds": 0.6
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "7ff5b262a9ee4ff388d4e67faf40843f",
+          "start_seconds": 18.929,
+          "run_seconds": 10.004,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea73-28ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-03T23:50:42.088000+00:00",
+      "stopped": "2026-11-03T23:54:38.730000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "eab5022ba0e846d984103db17e43bdc8",
+          "start_seconds": 16.553,
+          "run_seconds": 1.829,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "50a6b68bdca94ee3b360f68dac99cc72",
+          "start_seconds": 21.52,
+          "run_seconds": 85.178,
+          "billed_seconds": 115,
+          "cost": 0.0007885486111111111,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-03",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 2.5,
+              "copy": 0.0,
+              "merge": 79.0,
+              "deletes": 1.6,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 82.9,
+              "redshift_seconds": 78.4
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "dacddd68cccf407a81b000d16f1e9fc6",
+          "start_seconds": 24.07,
+          "run_seconds": 10.573,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "3f6aea75-80ee-410a-a482-19a05de5cfdb",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:00:42.567000+00:00",
+      "stopped": "2026-11-04T00:04:42.871000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "264370763800416a83e7501b3a9e27d4",
+          "start_seconds": 18.812,
+          "run_seconds": 3.091,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "48b6c4d582f04b198281a8e203cce112",
+          "start_seconds": 17.985,
+          "run_seconds": 87.165,
+          "billed_seconds": 117,
+          "cost": 0.0008022625,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 2.6,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 15.5,
+              "copy": 0.0,
+              "merge": 67.1,
+              "deletes": 2.6,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 85.1,
+              "redshift_seconds": 81.2
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "5eb60c69f69e4483aa3868b7a88d7947",
+          "start_seconds": 18.094,
+          "run_seconds": 13.533,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea77-d8a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:10:42.226000+00:00",
+      "stopped": "2026-11-04T00:13:16.966000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "362a6d3a44b1449a9fcc6cec35ab0b9d",
+          "start_seconds": 18.691,
+          "run_seconds": 2.043,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "fe15eb15d76f4cb98713b4c3b4b56a52",
+          "start_seconds": 16.627,
+          "run_seconds": 6.857,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.5,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.3,
+              "loaded_files": 1.6,
+              "copy": 0.0,
+              "merge": 1.6,
+              "deletes": 1.5,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 4.6,
+              "redshift_seconds": 0.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "94f12e877d234f7ba0e6bcc55130ce55",
+          "start_seconds": 21.373,
+          "run_seconds": 10.781,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea7a-30a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:20:42.115000+00:00",
+      "stopped": "2026-11-04T00:23:32.384000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "3dc157e3eddc4f35a49871bd8b22b664",
+          "start_seconds": 23.08,
+          "run_seconds": 1.923,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "946af3a63da7468a8c409a3481d1aefa",
+          "start_seconds": 25.844,
+          "run_seconds": 7.976,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.8,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 2.1,
+              "copy": 0.0,
+              "merge": 1.9,
+              "deletes": 1.8,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 5.6,
+              "redshift_seconds": 0.6
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "b6d769d81e614fa1a82c7dbc421f9cd1",
+          "start_seconds": 16.541,
+          "run_seconds": 11.173,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea7c-88a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:30:42.118000+00:00",
+      "stopped": "2026-11-04T00:34:42.373000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "75605df096c8430280741b84de210489",
+          "start_seconds": 21.927,
+          "run_seconds": 1.952,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "9695e7765d8742da92d5dcf43cd52b25",
+          "start_seconds": 21.111,
+          "run_seconds": 82.079,
+          "billed_seconds": 121,
+          "cost": 0.0008296902777777779,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.9,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 2.4,
+              "copy": 0.0,
+              "merge": 75.9,
+              "deletes": 1.9,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 79.8,
+              "redshift_seconds": 74.6
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "7c537fd15b574b74bba7d5e3f5a28176",
+          "start_seconds": 22.626,
+          "run_seconds": 10.786,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea7e-e0a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:40:42.107000+00:00",
+      "stopped": "2026-11-04T00:43:58.843000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "af80d58c75c249878e34b37065260c6b",
+          "start_seconds": 20.234,
+          "run_seconds": 1.863,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "eb8c36b40b3d4831a7086e148b657a07",
+          "start_seconds": 20.371,
+          "run_seconds": 43.568,
+          "billed_seconds": 78,
+          "cost": 0.0005348416666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 2.1,
+            "phase_seconds": {
+              "lock": 36.0,
+              "lake": 0.2,
+              "loaded_files": 1.9,
+              "copy": 0.0,
+              "merge": 1.9,
+              "deletes": 2.1,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 5.7,
+              "redshift_seconds": 0.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "c53872f5b3414e28bcbf9e79307fe4c8",
+          "start_seconds": 20.465,
+          "run_seconds": 11.548,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea81-38a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T00:50:42.094000+00:00",
+      "stopped": "2026-11-04T00:53:09.021000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "0586281300024a1b952f14076a928313",
+          "start_seconds": 16.84,
+          "run_seconds": 2.011,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "288e5bce53734eb08b1cedb61d073650",
+          "start_seconds": 16.518,
+          "run_seconds": 6.644,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.5,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 0.0,
+              "merge": 1.5,
+              "deletes": 1.5,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 4.6,
+              "redshift_seconds": 0.6
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "8f5e51fb09c448b882f59fc678477bc3",
+          "start_seconds": 15.488,
+          "run_seconds": 10.592,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea83-90a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T01:00:42.097000+00:00",
+      "stopped": "2026-11-04T01:04:32.242000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "4cf014022add477883f04bfbf91c1641",
+          "start_seconds": 25.949,
+          "run_seconds": 1.812,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "4f6a0f39b74c4960a09da7ddcb120542",
+          "start_seconds": 20.702,
+          "run_seconds": 63.753,
+          "billed_seconds": 95,
+          "cost": 0.0006514097222222223,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 0.0,
+              "merge": 58.2,
+              "deletes": 1.6,
+              "unlock": 0.3
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 61.3,
+              "redshift_seconds": 57.2
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "33e96a00a26e4da591420d22aa968720",
+          "start_seconds": 26.935,
+          "run_seconds": 10.537,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea85-e8a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T01:10:42.082000+00:00",
+      "stopped": "2026-11-04T01:14:38.135000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "9b98a685aa894b21a06493183e6a2be1",
+          "start_seconds": 18.387,
+          "run_seconds": 2.719,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "f9e41cf90455448f9295637186ab3be2",
+          "start_seconds": 19.817,
+          "run_seconds": 86.374,
+          "billed_seconds": 117,
+          "cost": 0.0008022625,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.3,
+              "lake": 0.2,
+              "loaded_files": 22.0,
+              "copy": 0.0,
+              "merge": 60.7,
+              "deletes": 1.6,
+              "unlock": 0.2
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 84.2,
+              "redshift_seconds": 80.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "628209f0e05e446aa387fe7a220cc313",
+          "start_seconds": 19.636,
+          "run_seconds": 10.813,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea88-40a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T01:20:42.167000+00:00",
+      "stopped": "2026-11-04T01:23:29.603000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "e18f8743103847608b2198b365c56b42",
+          "start_seconds": 17.65,
+          "run_seconds": 2.662,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "ff861861156045c598b2fb85f8c41de9",
+          "start_seconds": 31.086,
+          "run_seconds": 6.838,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 1.7,
+              "copy": 0.0,
+              "merge": 1.6,
+              "deletes": 1.6,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 4.8,
+              "redshift_seconds": 0.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "28a475ad72b14c22ab8402593be1f994",
+          "start_seconds": 19.11,
+          "run_seconds": 10.357,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea8a-98a4-4354-9ff8-5b73f6bb58fe",
+      "status": "SUCCEEDED",
+      "started": "2026-11-04T01:30:42.103000+00:00",
+      "stopped": "2026-11-04T01:33:21.498000+00:00",
+      "redrives": 0,
+      "attempts": 3,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "681fe88dfbdd40739b6e172d3ff58df7",
+          "start_seconds": 16.797,
+          "run_seconds": 2.459,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        },
+        {
+          "state": "Load",
+          "outcome": "succeeded",
+          "task_id": "9584fe0399f1441b9927c98074d6b873",
+          "start_seconds": 16.898,
+          "run_seconds": 6.663,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false,
+          "output": {
+            "step": "load",
+            "warehouse": "redshift",
+            "ingest_date": "2026-11-04",
+            "files_loaded": 0,
+            "rows_loaded": 0,
+            "rows_merged": 0,
+            "requests_applied": 0,
+            "rows_deleted": 0,
+            "delete_seconds": 1.6,
+            "phase_seconds": {
+              "lock": 0.4,
+              "lake": 0.2,
+              "loaded_files": 1.6,
+              "copy": 0.0,
+              "merge": 1.5,
+              "deletes": 1.6,
+              "unlock": 0.1
+            },
+            "lock_waited_on": null,
+            "statements": {
+              "count": 3,
+              "seconds": 4.5,
+              "redshift_seconds": 0.5
+            }
+          }
+        },
+        {
+          "state": "Verify",
+          "outcome": "succeeded",
+          "task_id": "54402b77433745e8816688b9487c2e67",
+          "start_seconds": 26.72,
+          "run_seconds": 10.683,
+          "billed_seconds": 60,
+          "cost": 0.0004114166666666667,
+          "drilled": false
+        }
+      ]
+    },
+    {
+      "name": "8b6aea8c-f0a4-4354-9ff8-5b73f6bb58fe",
+      "status": "RUNNING",
+      "started": "2026-11-04T01:40:42.206000+00:00",
+      "stopped": null,
+      "redrives": 0,
+      "attempts": 2,
+      "drilled": false,
+      "tasks": [
+        {
+          "state": "Curate",
+          "outcome": "succeeded",
+          "task_id": "6e474bfd28f0403f842165f96764d5f4",
+          "start_seconds": 21.541,
+          "run_seconds": 34.022,
+          "billed_seconds": 65,
+          "cost": 0.00044570138888888887,
+          "drilled": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "files_scanned": 27,
+  "artifact": {
+    "implementation_files_present": false,
+    "terraform_state_or_plans_present": false,
+    "cloud_workflows_present": false,
+    "private_identifiers_present": false
+  }
+}

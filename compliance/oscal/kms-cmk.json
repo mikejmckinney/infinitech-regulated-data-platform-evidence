@@ -1,0 +1,173 @@
+{
+  "component-definition": {
+    "uuid": "5c8e7e4a-5072-5899-9403-5bcb3b376f31",
+    "metadata": {
+      "title": "IRDP component definition: KMS customer-managed keys per data classification",
+      "last-modified": "2026-10-25T02:18:28Z",
+      "version": "sha256-883199af403975c0",
+      "oscal-version": "1.2.3",
+      "props": [
+        {
+          "name": "provenance",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "Infinitech-productized"
+        },
+        {
+          "name": "partition",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "aws"
+        }
+      ],
+      "roles": [
+        {
+          "id": "provider",
+          "title": "Provider"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "38292134-d6e8-5d6c-99f1-3c8ae99f8825",
+          "type": "organization",
+          "name": "Infinitech"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "e50d3bae-1d77-5113-b379-fbe2ebae0391",
+        "type": "service",
+        "title": "KMS customer-managed keys per data classification",
+        "description": "One AWS KMS customer-managed key and alias for each data classification the caller names (internal, confidential, or restricted), plus IAM policy snippets that let each consumer use only its classification's key through one AWS service.",
+        "purpose": "Encryption keys for every regulated resource IRDP creates.",
+        "props": [
+          {
+            "name": "pattern-provenance",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "shipped-at-client"
+          },
+          {
+            "name": "terraform-module",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "modules/encryption/kms-cmk-per-classification"
+          }
+        ],
+        "links": [
+          {
+            "href": "modules/encryption/kms-cmk-per-classification",
+            "rel": "reference",
+            "text": "Terraform module"
+          }
+        ],
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "38292134-d6e8-5d6c-99f1-3c8ae99f8825"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "38c5053f-4e2d-5c8e-aee4-d55406a74fb3",
+            "source": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.6.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+            "description": "How the KMS customer-managed keys per data classification component implements NIST SP 800-53 Rev. 5.2.0 controls.",
+            "implemented-requirements": [
+              {
+                "uuid": "1870162d-941b-543b-ab84-25ccf4222d75",
+                "control-id": "sc-12",
+                "description": "Each classification gets its own customer-managed key with automatic rotation on. The rotation period is limited to 90 to 2,560 days and the deletion window to 7 to 30 days. Keys in a custom key store (CloudHSM) can't be rotated automatically, so for those the module turns rotation off and reports it as manual.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Cryptographic Key Establishment and Management"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/keys.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/variables.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/tests/keys.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/tests/keys.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "ec203615-b307-5f1d-8aa0-b2b8c63d077b",
+                "control-id": "sc-28.1",
+                "description": "Data at rest is encrypted with the key for its classification. The module refuses a \"public\" classification, so no regulated resource can be pointed at an unclassified key.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Cryptographic Protection"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/tests/keys.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "b42c7136-319e-5764-9a44-8f8b57ebbc26",
+                "control-id": "ac-6",
+                "description": "Key administration is delegated to IAM in the owning account, and CloudWatch Logs may use a key only for log groups in that account. Consumers get a policy per classification and consumer that allows key use only through one AWS service (kms:ViaService) in the deployment's region.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Least Privilege"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/policies.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/policies.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/policies.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/tests/keys.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/encryption/kms-cmk-per-classification/tests/keys.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

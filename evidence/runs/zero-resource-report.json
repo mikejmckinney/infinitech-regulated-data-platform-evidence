@@ -1,0 +1,36 @@
+{
+  "schema": "irdp.zero-resource-report/v1",
+  "generated_at": "2026-11-04T02:03:31+00:00",
+  "account": "redacted",
+  "region": "us-east-1",
+  "regions": [
+    "us-east-1",
+    "us-west-2"
+  ],
+  "min_age_hours": 0.0,
+  "billable": [],
+  "leftovers": [
+    {
+      "kind": "Redshift Serverless recovery point (deleted by AWS within a day)",
+      "id": "444629c0-7a13-4325-ab61-1214049f8b80",
+      "created": "2026-11-04T01:40:02.619000+00:00",
+      "billable": false,
+      "region": "us-west-2"
+    },
+    {
+      "kind": "Redshift Serverless recovery point (deleted by AWS within a day)",
+      "id": "a2eb0c82-cc0f-4c0f-8d1b-a3b4f5db6e6d",
+      "created": "2026-11-04T00:58:56.701000+00:00",
+      "billable": false,
+      "region": "us-west-2"
+    },
+    {
+      "kind": "Redshift Serverless recovery point (deleted by AWS within a day)",
+      "id": "12f0302b-5e36-4fd5-8e35-b9ef063ec112",
+      "created": "2026-11-03T23:20:07.706000+00:00",
+      "billable": false,
+      "region": "us-west-2"
+    }
+  ],
+  "clean": true
+}

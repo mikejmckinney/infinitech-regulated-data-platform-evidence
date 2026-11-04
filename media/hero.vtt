@@ -1,0 +1,53 @@
+WEBVTT
+
+1
+00:00:00.760 --> 00:00:05.710
+This is a regulated data platform on AWS,
+recorded live.
+
+2
+00:00:07.090 --> 00:00:11.580
+A change that would make the warehouse
+public fails the policy gate before it
+
+3
+00:00:11.710 --> 00:00:12.200
+can merge.
+
+4
+00:00:14.184 --> 00:00:19.464
+Records stream in through Firehose, land
+in an encrypted lake, and load into
+
+5
+00:00:19.464 --> 00:00:21.944
+Redshift on a Step Functions pipeline.
+
+6
+00:00:23.528 --> 00:00:28.708
+A read-only user can query them.
+When they try to delete, Redshift refuses.
+
+7
+00:00:30.552 --> 00:00:35.382
+We failed it over to a second region.
+The warm standby held every event
+
+8
+00:00:35.382 --> 00:00:38.652
+two point one minutes later, with no
+data lost.
+
+9
+00:00:40.366 --> 00:00:44.496
+Then we tore it all down, and the
+report found nothing billable left from
+
+10
+00:00:44.496 --> 00:00:45.086
+the demo.
+
+11
+00:00:47.168 --> 00:00:51.638
+Infinitech's Regulated Data Platform.
+Watch the full walkthrough.

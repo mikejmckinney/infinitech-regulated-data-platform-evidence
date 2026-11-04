@@ -1,0 +1,7 @@
+Failover drill, us-east-1 to us-west-2; failure at 2026-11-04T00:04:54Z.
+Warm standby: RTO 2.1 min, RPO 0.0 min.
+  2 of 2 curated files loaded; 99000 events against the primary's 99000.
+Snapshot restore: RTO 8.2 min, RPO 20.8 min.
+  RPO here is the drill's own snapshot's age at the failure, not a production backup interval.
+  restore of snapshot copy:irdp-drill-1793749449 took 5.8 min; events: 99000.
+Drill snapshots deleted: 2.

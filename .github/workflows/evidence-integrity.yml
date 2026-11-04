@@ -1,0 +1,37 @@
+name: evidence integrity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify published checksums
+        run: sha256sum --check SHA256SUMS
+
+      - name: Verify evidence profile
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          provenance = json.loads(Path("PROVENANCE.json").read_text())
+          validation = json.loads(Path("evidence/validation.json").read_text())
+          boundary = json.loads(Path("evidence/publication-boundary.json").read_text())
+
+          assert provenance["profile"] == "public-reference-evidence"
+          assert provenance["source"]["repository_visibility"] == "private"
+          assert "repository_url" not in provenance["source"]
+          assert validation["result"] == "passed"
+          assert boundary["result"] == "passed"
+          assert all(value is False for value in boundary["artifact"].values())
+          PY

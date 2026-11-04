@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "scenario": "the same workgroup with publicly_accessible = true",
+  "expected": "reject",
+  "result": "as expected",
+  "resources_checked": [
+    {
+      "address": "module.redshift.aws_redshiftserverless_namespace.this",
+      "type": "aws_redshiftserverless_namespace"
+    },
+    {
+      "address": "module.redshift.aws_redshiftserverless_workgroup.this",
+      "type": "aws_redshiftserverless_workgroup"
+    }
+  ],
+  "denials": [
+    "no_public_resources: module.redshift.aws_redshiftserverless_workgroup.this is publicly accessible."
+  ]
+}

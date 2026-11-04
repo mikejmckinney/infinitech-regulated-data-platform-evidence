@@ -1,0 +1,272 @@
+{
+  "component-definition": {
+    "uuid": "3406deaf-f85c-5525-8057-500566765d81",
+    "metadata": {
+      "title": "IRDP component definition: Step Functions pipeline that runs each step as a Fargate task",
+      "last-modified": "2026-10-31T20:31:34Z",
+      "version": "sha256-757506822020a91f",
+      "oscal-version": "1.2.3",
+      "props": [
+        {
+          "name": "provenance",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "Infinitech-productized"
+        },
+        {
+          "name": "partition",
+          "ns": "https://infinitechplatforms.com/ns/irdp",
+          "value": "aws"
+        }
+      ],
+      "roles": [
+        {
+          "id": "provider",
+          "title": "Provider"
+        }
+      ],
+      "parties": [
+        {
+          "uuid": "38292134-d6e8-5d6c-99f1-3c8ae99f8825",
+          "type": "organization",
+          "name": "Infinitech"
+        }
+      ]
+    },
+    "components": [
+      {
+        "uuid": "dfbfe84b-6eaa-58b2-a29e-4abf4518075a",
+        "type": "service",
+        "title": "Step Functions pipeline that runs each step as a Fargate task",
+        "description": "A Step Functions standard workflow, started every 10 minutes by EventBridge Scheduler, that runs each pipeline step as a Fargate task in the workload subnets: curate, load, and verify, with land first when the ingest is MSK. The tasks run under separate execution, worker, and producer roles, and log to one CloudWatch Logs group on a customer-managed key.",
+        "purpose": "Orchestrates the pipeline's tasks, IRDP's default for AWS-only buyers.",
+        "props": [
+          {
+            "name": "pattern-provenance",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "Infinitech-productized"
+          },
+          {
+            "name": "terraform-module",
+            "ns": "https://infinitechplatforms.com/ns/irdp",
+            "value": "modules/orchestration/sfn-fargate-pipeline"
+          }
+        ],
+        "links": [
+          {
+            "href": "modules/orchestration/sfn-fargate-pipeline",
+            "rel": "reference",
+            "text": "Terraform module"
+          }
+        ],
+        "responsible-roles": [
+          {
+            "role-id": "provider",
+            "party-uuids": [
+              "38292134-d6e8-5d6c-99f1-3c8ae99f8825"
+            ]
+          }
+        ],
+        "control-implementations": [
+          {
+            "uuid": "ef98e05e-a106-5fe1-9b71-fcea3d64c501",
+            "source": "https://raw.githubusercontent.com/usnistgov/oscal-content/v1.6.0/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json",
+            "description": "How the Step Functions pipeline that runs each step as a Fargate task component implements NIST SP 800-53 Rev. 5.2.0 controls.",
+            "implemented-requirements": [
+              {
+                "uuid": "a2044fcb-b7ed-50a4-ae19-bb6e5367f001",
+                "control-id": "ac-6",
+                "description": "Each identity holds only its own job. The execution role pulls the one task image and writes the tasks' log group. The worker role reads and writes the lake prefixes the steps use and reads the Snowflake key, decrypting it only through Secrets Manager. A separate producer role writes the synthetic input, so the pipeline can't write its own. With lake erasure on, a separate eraser role is the only one that may delete lake objects and their old versions, for delete requests; the worker never gets that policy. The Scheduler role may only start this state machine. Every role the module creates carries the workload permissions boundary.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Least Privilege"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/state-machine.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/tests/contract.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/eraser.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/tests/contract.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ],
+                "remarks": "The state machine runs as IMCLZ's states-ecs-runner role, which IMCLZ owns and scopes. It's the one role that may pass these roles to ECS."
+              },
+              {
+                "uuid": "ab093b26-984f-5493-8ef8-e0c9e9f5e012",
+                "control-id": "ia-9",
+                "description": "The task roles trust only ECS tasks in this account and region, by aws:SourceAccount and aws:SourceArn, and the Scheduler role trusts only EventBridge Scheduler acting for this account.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Service Identification and Authentication"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/state-machine.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "771482e6-7a4d-55eb-ab2c-faa4d1fe478f",
+                "control-id": "sc-7",
+                "description": "Every task runs in the subnets and security groups the caller passes (the workload subnets in the reference) with no public IP address.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Boundary Protection"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/state-machine.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/tests/contract.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "e45be56a-ba70-5f74-ab67-069fc79b5860",
+                "control-id": "cm-7",
+                "description": "Each task runs one container from the pipeline-task image, pinned to a commit SHA (a mutable tag is rejected), as UID 65532 on a read-only root file system with /tmp the only writable path.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Least Functionality"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "images/pipeline-task/Dockerfile",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/tests/contract.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "2b693787-22af-556d-acf3-805026e7c583",
+                "control-id": "ia-5.7",
+                "description": "Redshift, which every run loads, takes no stored credential: the tasks call the Data API as the worker role, and Redshift maps that role to its database role from the role's RedshiftDbRoles tag. With Snowflake, tasks get the key's Secrets Manager ARN, not the key, and the worker role reads the secret when a step runs. The task definitions and the state machine hold no credential.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "No Embedded Unencrypted Static Authenticators"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ]
+              },
+              {
+                "uuid": "f58ff309-f165-544f-8eb0-b43ea47818a8",
+                "control-id": "au-12",
+                "description": "Every task's output goes to one CloudWatch Logs group, encrypted with the customer-managed key passed in, under a stream per step and task, kept for log_retention_days.",
+                "props": [
+                  {
+                    "name": "control-title",
+                    "ns": "https://infinitechplatforms.com/ns/irdp",
+                    "value": "Audit Record Generation"
+                  }
+                ],
+                "links": [
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/main.tf",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  },
+                  {
+                    "href": "modules/orchestration/sfn-fargate-pipeline/tests/contract.tftest.hcl",
+                    "rel": "reference",
+                    "text": "Evidence"
+                  }
+                ],
+                "remarks": "The state machine's execution history stays in Step Functions and isn't delivered to CloudWatch Logs: that needs log-delivery actions on IMCLZ's runner role, which it doesn't have."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

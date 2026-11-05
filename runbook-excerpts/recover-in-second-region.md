@@ -57,7 +57,7 @@ terraform -chdir=environments/demo-dr output -json copy             # primary_na
 terraform -chdir=environments/demo-dr output -json restore_target   # workgroup and database names
 terraform -chdir=environments/demo-dr output -json standby          # the warm standby's
 terraform -chdir=environments/demo-dr output -json pipeline         # the standby pipeline's state machine
-terraform -chdir=environments/demo-dr output -json replication      # the replica bucket
+terraform -chdir=environments/demo-dr output -json replication      # the primary and replica curated buckets
 ```
 
 - The primary copies its backups to the standby region. `apply-demo.yml`
@@ -152,15 +152,44 @@ aws redshift-data get-statement-result --region us-west-2 --id <statement id>
 ```
 
 For the warm standby, run the same count on `irdp-demo-dr` with
-`--secret-arn` from its `standby` output, then compare
-`SELECT source_file FROM landing.loaded_files` with the curated files in
-the replica bucket:
+`--secret-arn` from its `standby` output. Then read the files it loaded,
+`SELECT source_file FROM landing.loaded_files`, and keep their keys:
 
 ```bash
-aws s3api list-objects-v2 --region us-west-2 --bucket <replica bucket> --prefix events/ --query "Contents[].Key"
+aws redshift-data get-statement-result --region us-west-2 --id <statement id> --output json \
+  | jq -r '.Records[][0].stringValue' | sort > loaded.txt
 ```
 
-A file in the bucket and not in `loaded_files` is the warm standby's loss.
+**The load backlog:** curated files that reached the replica bucket and
+aren't loaded yet. Step 6's run should leave none:
+
+```bash
+aws s3api list-objects-v2 --region us-west-2 --bucket <replica bucket> --prefix events/v1/ --output json \
+  | jq -r '.Contents[].Key' | sort > replicated.txt
+comm -23 replicated.txt loaded.txt
+```
+
+This can't show what the warm standby lost. A file the primary wrote that
+never replicated is in neither list, so while the primary region's bucket
+can't be listed, the warm standby's loss is unknown. Replication Time
+Control replicates 99.9% of new objects within 15 minutes, so the files
+most likely missing are the last ones written before the outage.
+
+**The loss, once the primary's curated bucket can be listed again:** the
+comparison the drill makes. Every curated file the primary wrote up to
+T0, less the ones the standby loaded, is what it lost; the oldest one's
+write time, subtracted from T0, is the RPO. Give T0 in the form the CLI
+prints, so the two compare as text:
+
+```bash
+aws s3api list-objects-v2 --region us-east-1 --bucket <primary curated bucket> --prefix events/v1/ --output json \
+  | jq -r --arg t0 "<T0, such as 2026-11-05T12:00:00+00:00>" '.Contents[] | select(.LastModified <= $t0) | .Key' \
+  | sort > primary.txt
+comm -23 primary.txt loaded.txt
+```
+
+Nothing listed means nothing was lost. The reference keeps no S3 Inventory
+report of the curated bucket, so this waits for the primary region.
 
 ## Failback
 
@@ -170,8 +199,11 @@ short:
 1. Once the primary region answers, check that its runs succeed again:
    `irdp-demo-sfn-no-successful-run` back to OK
    ([failure modes](failure-modes.md#no-successful-run-in-30-minutes)).
-2. Move readers back to `irdp-demo`.
-3. `irdp-demo-restore` keeps the restored data, billed as storage, until
+2. With the warm standby, work out what it lost
+   ([Verify](#verify), the loss once the primary's bucket can be listed)
+   and record it with T0.
+3. Move readers back to `irdp-demo`.
+4. `irdp-demo-restore` keeps the restored data, billed as storage, until
    the next restore replaces it or the standby stack is destroyed.
 
 **The failback boundary:** anything written in the standby region during

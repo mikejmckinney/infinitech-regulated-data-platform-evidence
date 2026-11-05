@@ -11,7 +11,7 @@ you: the reference comes with no on-call or 24x7 support.
 
 | Procedure | Use it when | Script | Tested live |
 | --- | --- | --- | --- |
-| [Recover in the second AWS region](recover-in-second-region.md) | The primary region is down: restore the copied backup, the default, or use the warm standby | | Drilled with `make demo-failover` in cycles 10, 11, 12 and 15, both paths recovered; the steps haven't been run by hand |
+| [Recover in the second AWS region](recover-in-second-region.md) | The primary region is down: restore the copied backup, the default, or use the warm standby | `scripts/recover-second-region.py` | Drilled with `make demo-failover` in cycles 10, 11, 12 and 15, both paths recovered; the steps haven't been run by hand, and the script hasn't run live |
 | Fail over to the Azure standby | A deployment with cross-cloud recovery, built on request: AWS `us-east-1` is down, or a DR drill | `scripts/failover-azure-gov.sh` | No. Blocked until the Azure DR subscription, its Terraform root, and the lake copy job exist. Only the lake fails over |
 | [Rotate keys](rotate-keys.md) | The rotation schedule, a suspected leak, someone leaving, a handoff | `scripts/rotate-keys.sh` | No; not yet run in a demo cycle |
 | Scale Airflow | The queue keeps growing, or workers are Pending | `scripts/scale-airflow.sh` | No; not yet run in an Airflow cycle |
@@ -32,10 +32,11 @@ needs no credentials:
 bash scripts/failover-azure-gov.sh --dry-run
 bash scripts/rotate-keys.sh --dry-run
 bash scripts/scale-airflow.sh --dry-run
+scripts/recover-second-region.py both --dry-run
 ```
 
 Steps that only a person can take (Snowsight, an Entra sign-in, checking a
-fingerprint) print "By hand" and wait for you to type `done`.
+fingerprint, declaring an outage) print "By hand" and wait for you to type `done`.
 
 ## Who runs what
 

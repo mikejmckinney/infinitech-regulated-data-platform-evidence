@@ -19,10 +19,13 @@ whose schedule it stopped, not a region that's down. The snapshot restore
 recovered in 7.3 to 8.2 min and the warm standby in 1.8 to 2.7 min, with
 every event back on both
 (`docs/demo-results.md`).
-Nobody has run these steps by hand, and no script runs them yet: the
-commands are the ones `scripts/failover_drill.py`
-issues. `scripts/standby-files.sh`, which
-verification uses, is tested against a fake AWS CLI only.
+Nobody has run these steps by hand.
+`scripts/recover-second-region.py`
+runs them ([With the script](#with-the-script)), and it hasn't run live:
+it and `scripts/standby-files.sh`, which
+verification uses, are tested against fake AWS calls only. Its backup
+choice and restore calls are the drill's
+(`scripts/second_region.py`).
 
 ## What comes back
 
@@ -54,12 +57,15 @@ same reason:
 
 ```bash
 terraform -chdir=environments/demo-dr init -input=false -backend-config=demo.s3.tfbackend
-terraform -chdir=environments/demo-dr output -json copy             # primary_namespace_id
-terraform -chdir=environments/demo-dr output -json restore_target   # workgroup and database names
-terraform -chdir=environments/demo-dr output -json standby          # the warm standby's
-terraform -chdir=environments/demo-dr output -json pipeline         # the standby pipeline's state machine
-terraform -chdir=environments/demo-dr output -json replication      # the primary and replica curated buckets
+terraform -chdir=environments/demo-dr output -json > dr-outputs.json
+jq .copy.value dr-outputs.json             # primary_namespace_id
+jq .restore_target.value dr-outputs.json   # workgroup and database names
+jq .standby.value dr-outputs.json          # the warm standby's
+jq .pipeline.value dr-outputs.json         # the standby pipeline's state machine
+jq .replication.value dr-outputs.json      # the primary and replica curated buckets
 ```
+
+The script reads `dr-outputs.json` as it is, so keep the whole file.
 
 - The primary copies its backups to the standby region. `apply-demo.yml`
   turns that on after the standby stack applies
@@ -121,8 +127,7 @@ terraform -chdir=environments/demo-dr output -json replication      # the primar
    file that arrived, and wait for it to succeed:
 
    ```bash
-   machine=$(aws stepfunctions list-state-machines --region us-west-2 \
-     --query "stateMachines[?name=='irdp-demo-dr-pipeline'].stateMachineArn" --output text)
+   machine=$(jq -r .pipeline.value.state_machine_arn dr-outputs.json)
    aws stepfunctions start-execution --region us-west-2 --state-machine-arn "$machine" \
      --input '{"scheduled_time": "<the time now, UTC, such as 2026-11-05T12:00:00Z>"}'
    aws stepfunctions describe-execution --region us-west-2 --execution-arn <execution arn> --query status
@@ -139,6 +144,26 @@ terraform -chdir=environments/demo-dr output -json replication      # the primar
 8. **Hold.** Nothing ingests or curates new events until the primary
    returns. Don't load anything into the standby region's warehouses by
    hand: nothing copies them back.
+
+### With the script
+
+`scripts/recover-second-region.py`
+runs the steps above and the checks below in order, with the same step
+numbers, and prints each command before it runs it. Step 1 waits for you
+to type `done`. It reads `dr-outputs.json` and T0, in the form
+`2026-11-05T12:00:00Z`:
+
+```bash
+scripts/recover-second-region.py restore --dr <dr-outputs.json> --t0 <T0>      # steps 1 to 5, 7, 8
+scripts/recover-second-region.py warm-standby --dr <dr-outputs.json> --t0 <T0> # steps 1, 6 to 8, the backlog and the loss
+scripts/recover-second-region.py both --dry-run                                # every step, run none
+```
+
+It stops at the first step that fails, with exit 1. `both` runs the
+restore first, so if the restore fails, run `warm-standby` on its own. Exit
+3 means the warehouses are back but the warm standby's loss is unknown,
+because the primary's curated bucket couldn't be listed; once it can, run
+`scripts/recover-second-region.py loss --dr <dr-outputs.json> --t0 <T0>`.
 
 ## Verify
 

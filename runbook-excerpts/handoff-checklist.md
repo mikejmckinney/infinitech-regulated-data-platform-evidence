@@ -118,8 +118,7 @@ Known on 2026-11-02; add anything found since:
   on Azure aren't built (`docs/azure-gov-dr.md`).
 - [ ] Snowflake replication (failover groups) is documented, not built.
 - [ ] HSM-backed keys (`custom_key_store_id`) are untested.
-- [ ] Nothing has run in GovCloud, Azure Government, or SnowGov
-  (first GovCloud run).
+- [ ] Nothing has run in GovCloud, Azure Government, or SnowGov.
 - [ ] Airflow alternative only: the demo maps `IrdpDemoOperator` to
   `AmazonEKSEditPolicy` in the Airflow namespaces, which can read their
   Secrets (the Snowflake key, the database password). Leave the customer's
@@ -137,8 +136,7 @@ Known on 2026-11-02; add anything found since:
   Keep secrets out of plain SSM parameters in that account, or turn the
   tunnel off (`node_ssm_tunnel`) where operators reach the API another way.
 - [ ] Chaos Mesh drills run only on the Airflow alternative; the default
-  Step Functions path has the forced-failure drills (`make demo-chaos`)
-  (issue 121).
+  Step Functions path has the forced-failure drills (`make demo-chaos`).
 - [ ] Upstream IMCLZ gaps:
   #178
   (GovCloud accounts and regions) and

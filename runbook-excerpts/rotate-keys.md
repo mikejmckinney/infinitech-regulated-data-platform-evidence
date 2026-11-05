@@ -41,7 +41,7 @@ read** ([handoff checklist](handoff-checklist.md)).
 | CMK rotation | An AWS administrator session in the account | No workflow does it, and the `IrdpDemoOperator` permission set has no KMS access |
 
 GovCloud and Azure Government deployments may require PIV/CAC for the
-workstation steps (§5).
+workstation steps.
 Nothing here automates smart-card interaction.
 
 ## Classification CMKs

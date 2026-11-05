@@ -15,7 +15,7 @@ The cluster commands need `KUBECONFIG` from `scripts/eks-tunnel.sh start`
 entries, "Pods won't start", "A Helm release never finished installing",
 "A pipeline run failed", and "The Chaos Mesh controller keeps restarting",
 come from a live demo cycle; the rest haven't been seen live yet, and drill
-reviews will correct them (changelog).
+reviews will correct them.
 
 The Step Functions entries (2026-11-05) cover the default pipeline's two
 alarms (`dashboards.tf`).
@@ -37,7 +37,12 @@ did.
   failed runs (`scripts/sfn_runs.py` `logs`). A
   failed run's own cause says only that the container exited; its log
   says why. To find the run itself:
-  `aws stepfunctions list-executions --state-machine-arn arn:aws:states:us-east-1:<account id>:stateMachine:irdp-demo-sfn-pipeline --status-filter FAILED --max-items 3`.
+
+  ```bash
+  machine=$(aws stepfunctions list-state-machines --query "stateMachines[?name=='irdp-demo-sfn-pipeline'].stateMachineArn" --output text)
+  aws stepfunctions list-executions --state-machine-arn "$machine" --status-filter FAILED --max-items 3
+  ```
+
 - **Fix:** fix what the log names, then redrive the run from the step that
   failed:
   `aws stepfunctions redrive-execution --execution-arn <execution arn>`.
@@ -59,10 +64,14 @@ did.
   10-minute periods. Missing data counts as breaching, so it also fires
   when no run starts at all. Right after `make demo-up` it's in alarm until
   the first run succeeds; that's expected.
-- **First command:**
-  `aws scheduler get-schedule --name irdp-demo-sfn-pipeline --query State`,
-  then
-  `aws stepfunctions list-executions --state-machine-arn arn:aws:states:us-east-1:<account id>:stateMachine:irdp-demo-sfn-pipeline --max-items 5`.
+- **First command:** the schedule's state, then the latest runs, with
+  `$machine` found as in the entry above:
+
+  ```bash
+  aws scheduler get-schedule --name irdp-demo-sfn-pipeline --query State
+  aws stepfunctions list-executions --state-machine-arn "$machine" --max-items 5
+  ```
+
 - **Fix**, by what they show:
   - Runs failing: [A Step Functions run failed](#a-step-functions-run-failed).
   - The schedule is `DISABLED`: the failover drill turns it off while it

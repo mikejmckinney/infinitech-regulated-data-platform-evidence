@@ -11,8 +11,7 @@ keeps loaded, so it needs no restore. The demo's standby stack builds both
 (`environments/demo-dr`); a deployment
 has the default alone or both
 (`docs/stack-choices.md`).
-Recovery in Azure is a separate procedure, built on request
-(Fail over to the Azure standby).
+Recovery in Azure is a separate procedure, built on request.
 
 **Status (2026-11-05):** drilled in demo cycles 10, 11, 12 and 15 with
 `make demo-failover`, which makes the AWS calls below against a primary
@@ -79,8 +78,7 @@ terraform -chdir=environments/demo-dr output -json replication      # the replic
 ## Procedure
 
 1. **Declare.** Record who declared the outage, when (T0, UTC), and what
-   failed, in the incident's ticket or postmortem
-   (template).
+   failed, in the incident's ticket or postmortem.
 2. **Find the newest backup** of the primary in the standby region, a
    recovery point or a snapshot. Match on the primary namespace's ID, not
    its name: a name repeats every cycle, and the standby region lists an
@@ -122,8 +120,9 @@ terraform -chdir=environments/demo-dr output -json replication      # the replic
    file that arrived, and wait for it to succeed:
 
    ```bash
-   aws stepfunctions start-execution --region us-west-2 \
-     --state-machine-arn arn:aws:states:us-west-2:<account id>:stateMachine:irdp-demo-dr-pipeline \
+   machine=$(aws stepfunctions list-state-machines --region us-west-2 \
+     --query "stateMachines[?name=='irdp-demo-dr-pipeline'].stateMachineArn" --output text)
+   aws stepfunctions start-execution --region us-west-2 --state-machine-arn "$machine" \
      --input '{"scheduled_time": "<the time now, UTC, such as 2026-11-05T12:00:00Z>"}'
    aws stepfunctions describe-execution --region us-west-2 --execution-arn <execution arn> --query status
    ```

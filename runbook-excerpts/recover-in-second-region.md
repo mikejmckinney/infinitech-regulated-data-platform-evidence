@@ -21,7 +21,8 @@ every event back on both
 (`docs/demo-results.md`).
 Nobody has run these steps by hand, and no script runs them yet: the
 commands are the ones `scripts/failover_drill.py`
-issues.
+issues. `scripts/standby-files.sh`, which
+verification uses, is tested against a fake AWS CLI only.
 
 ## What comes back
 
@@ -152,21 +153,19 @@ aws redshift-data get-statement-result --region us-west-2 --id <statement id>
 ```
 
 For the warm standby, run the same count on `irdp-demo-dr` with
-`--secret-arn` from its `standby` output. Then read the files it loaded,
-`SELECT source_file FROM landing.loaded_files`, and keep their keys:
-
-```bash
-aws redshift-data get-statement-result --region us-west-2 --id <statement id> --output json \
-  | jq -r '.Records[][0].stringValue' | sort > loaded.txt
-```
+`--secret-arn` from its `standby` output. Then compare its loaded files,
+`landing.loaded_files`, with the lake, using
+`scripts/standby-files.sh`. It writes each
+listing to a file and checks it before comparing anything: if a listing or
+the query fails, or prints something that isn't the API's answer, it stops
+with exit 1 and says the result is unknown. It never reports nothing
+missing from a read that failed.
 
 **The load backlog:** curated files that reached the replica bucket and
 aren't loaded yet. Step 6's run should leave none:
 
 ```bash
-aws s3api list-objects-v2 --region us-west-2 --bucket <replica bucket> --prefix events/v1/ --output json \
-  | jq -r '.Contents[].Key' | sort > replicated.txt
-comm -23 replicated.txt loaded.txt
+scripts/standby-files.sh backlog --secret-arn <standby secret arn> --replica-bucket <replica bucket>
 ```
 
 This can't show what the warm standby lost. A file the primary wrote that
@@ -177,19 +176,16 @@ most likely missing are the last ones written before the outage.
 
 **The loss, once the primary's curated bucket can be listed again:** the
 comparison the drill makes. Every curated file the primary wrote up to
-T0, less the ones the standby loaded, is what it lost; the oldest one's
-write time, subtracted from T0, is the RPO. Give T0 in the form the CLI
-prints, so the two compare as text:
+T0, less the ones the standby loaded, is what it lost, and T0 less the
+oldest one's write time is the RPO:
 
 ```bash
-aws s3api list-objects-v2 --region us-east-1 --bucket <primary curated bucket> --prefix events/v1/ --output json \
-  | jq -r --arg t0 "<T0, such as 2026-11-05T12:00:00+00:00>" '.Contents[] | select(.LastModified <= $t0) | .Key' \
-  | sort > primary.txt
-comm -23 primary.txt loaded.txt
+scripts/standby-files.sh loss --secret-arn <standby secret arn> --primary-bucket <primary curated bucket> --t0 <T0, such as 2026-11-05T12:00:00Z>
 ```
 
-Nothing listed means nothing was lost. The reference keeps no S3 Inventory
-report of the curated bucket, so this waits for the primary region.
+It prints the files lost and the RPO, or that nothing was lost. The
+reference keeps no S3 Inventory report of the curated bucket, so this
+waits for the primary region.
 
 ## Failback
 

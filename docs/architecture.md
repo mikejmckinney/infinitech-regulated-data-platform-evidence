@@ -3,21 +3,10 @@
 IRDP's reference build on AWS, as demo cycle 15 ran it. Each part below
 says what it does and what the walkthrough shows of it.
 
-```mermaid
-flowchart LR
-  SRC[Sources] --> FH[Amazon Data Firehose]
-  FH --> LAND[(Landing bucket)]
-  subgraph pipeline["Step Functions, every 10 minutes"]
-    CUR[Curate task] --> LOAD[Load task] --> VER[Verify task]
-  end
-  LAND --> CUR
-  CUR --> CURATED[(Curated bucket)]
-  CUR --> QUAR[(Quarantine bucket)]
-  LOAD --> RS[(Redshift Serverless<br/>us-east-1)]
-  CURATED -- S3 replication --> CURW[(Curated copy<br/>us-west-2)]
-  CURW --> WARM[(Warm standby<br/>us-west-2)]
-  RS -- snapshot copy --> SNAP[(Snapshot copies<br/>us-west-2)]
-```
+![IRDP architecture: message sources through Amazon Data Firehose and file sources straight to the S3 lake, the Step Functions pipeline, Redshift Serverless, read-only access and CloudWatch in us-east-1, with the alternatives dashed; the network paths to each warehouse; snapshot copies (the default), S3 replication and a warm standby in us-west-2; and the controls on every change](architecture.svg)
+
+Cards with dashed borders are alternatives a deployment can switch on; the
+demo cycle and the walkthrough run the default path.
 
 ## Ingest
 

@@ -52,8 +52,9 @@ Copied snapshots carry the whole database, including what people build in
 the warehouse, and cost the least. Drills restored them in 7.3 to 8.2
 minutes. Their recovery point in production is the newest recovery point
 (Redshift Serverless takes one about every 30 minutes) plus the copy's trip
-to the second region, which took 3.6 to 25.6 minutes in the drills. AWS
-states no upper bound for that trip.
+to the second region, which took 3.6 to 24.1 minutes in the four drills
+in the [results](../evidence/results.md#failover-drills-across-cycles).
+AWS states no upper bound for that trip.
 
 The warm standby recovered in 1.8 to 2.7 minutes with nothing lost in every
 drill. It holds the pipeline's tables only, so tables people build by hand

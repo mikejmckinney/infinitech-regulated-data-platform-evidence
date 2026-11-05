@@ -1,34 +1,54 @@
 # Runbook and handoff
 
-The customer receives a runbook for the procedures their deployment uses, a
-catalog of failure modes, and a handoff checklist. This page shows how they
-are organized; the procedures themselves come with a deployment.
+A team that takes over IRDP gets a runbook with five procedures, a catalog
+of failure modes, and a changelog of what each demo cycle found, plus the
+checklist that hands the platform from Infinitech to them. The pages here
+are copied from that runbook.
 
-## Runbook
+| File | What's in it |
+| --- | --- |
+| [`runbook.md`](runbook.md) | The runbook's front page: the five procedures, when to use each, whether each has run live, who may run which step, and the tools an operator needs |
+| [`failover-to-azure.md`](failover-to-azure.md) | The whole procedure for failing over to the Azure warm standby when AWS `us-east-1` is down: what fails over and what doesn't, the RTO and RPO to expect, the steps, how to verify them, and failback. It hasn't run against a real standby; the page says what's missing |
+| [`rotate-keys.md`](rotate-keys.md) | The whole key rotation procedure: the KMS keys, the Snowflake service users' key pairs (with no sign-in gap while the pipeline runs), the Entra client secrets, Airflow's generated secrets, and the quarterly review of who CI trusts. None of it has run live yet |
+| [`failure-modes.md`](failure-modes.md) | Three entries from the failure-mode catalog, each with the signal, the first command to run, and the fix: a failed pipeline run, a Helm release left half-installed, and a KMS key that's disabled or pending deletion |
+| [`handoff-checklist.md`](handoff-checklist.md) | The whole handoff checklist: eight steps, the evidence that closes each, every credential to rotate, the open items on the day, and the sign-off |
 
-- **Procedures**, each with a script that prints its steps before it acts
-  and a `--dry-run` mode: failing over to a second site, rotating keys,
-  scaling the orchestrator, reviewing a drill, and a first run in AWS
-  GovCloud.
-- **Failure modes**, each as a signal, the first command to run, and the
-  fix. For example, from the pipeline section:
+## How the procedures run
 
-  > **A pipeline run failed.** *Signal:* the run-failed alarm. *First
-  > command:* print the latest run's task states and each task's last log
-  > lines. *Fix:* depends on the task. Rerunning is safe, because the load
-  > merges by event, so no event is inserted twice.
+Failover, key rotation, and Airflow scaling each have a script that prints
+every command before running it and stops at the first one that fails. `--dry-run` prints them all, runs
+none, and needs no credentials. Steps only a person can take, such as a
+Snowsight statement or an Entra sign-in, wait for the operator to type
+`done`. A check in the product's CI fails when a link, file path, `make`
+target, workflow input, or script call in the runbook no longer matches
+the code.
 
-- **A changelog** of what each demo cycle found and how the runbook changed.
+## Failing over to a second AWS region
 
-## Handoff checklist
+The failover in the walkthrough is a drill to a standby in us-west-2: the
+warm standby recovered in 2.1 minutes with nothing lost, and a restored
+snapshot in 8.2 ([run record](../evidence/runs/failover-drill.txt),
+[all drills](../evidence/results.md#failover-drills-across-cycles)). A
+script runs that drill. The runbook has no operator procedure for it yet,
+and the handoff checklist lists that as an open item.
 
-The handoff runs in eight steps, each closed by evidence the customer keeps:
+## What comes with a deployment
 
-1. Agree on what is handed over, and its state.
-2. Transfer ownership of the accounts' resources and the repository.
-3. Rotate everything Infinitech could read.
-4. Remove Infinitech's access.
-5. Run each procedure in a sandbox.
-6. Hand over the evidence.
-7. Record the open items.
-8. Sign off.
+The rest of the runbook: scaling Airflow, reviewing a chaos drill, the
+first run in AWS GovCloud, the other failure modes, and the changelog. The
+scripts the procedures call, and the Terraform and workflows they run
+against, come with the product, set up for your accounts. Email
+[hello@infinitechplatforms.com](mailto:hello@infinitechplatforms.com) to
+plan one.
+
+## What was changed
+
+The pages are generated from the runbook for each release of this
+repository, with three changes:
+
+- A link to a file that isn't here is plain text. A path such as
+  `docs/oscal.md` names a file in the product.
+- The demo account's ID reads `<account id>`, and the product
+  repository's name `<repository>`.
+- `failure-modes.md` keeps the catalog's introduction and three entries,
+  under their own section headings.

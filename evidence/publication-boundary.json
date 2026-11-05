@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "result": "passed",
-  "files_scanned": 27,
+  "files_scanned": 33,
   "artifact": {
     "implementation_files_present": false,
     "terraform_state_or_plans_present": false,

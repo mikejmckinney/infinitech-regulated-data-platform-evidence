@@ -89,7 +89,7 @@ has the earlier cycles.
 | `examples/policy-results/` | Policy gate output for a passing and a rejected plan |
 | `compliance/oscal/` | OSCAL component definitions, mapped to NIST SP 800-53, for the components the walkthrough shows |
 | `media/` | Video transcripts and WebVTT captions |
-| `runbook-excerpts/` | What the runbook covers, and one procedure from it |
+| `runbook-excerpts/` | Pages from the runbook: its front page, the Azure failover and key rotation procedures, three failure modes, and the handoff checklist |
 | `evidence/validation.json`, `evidence/publication-boundary.json` | The build's own checks of this package |
 
 ## What isn't here

@@ -68,8 +68,10 @@ has the measured times.
 Two CloudWatch dashboards, one for health and one for operations, show how
 runs ended, how fresh the ingested data is, ingest volume, and warehouse
 capacity. Two alarms watch the pipeline: one for a failed run, one for no
-successful run in a set window. People open the dashboards through IAM
-Identity Center, and each role sees only the dashboards it names.
+successful run in a set window. With Firehose ingest a third fires when
+records wait too long for delivery to the lake. People open the dashboards
+through IAM Identity Center, and each role sees only the dashboards it
+names.
 
 ## Governed changes
 

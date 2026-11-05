@@ -66,7 +66,7 @@ need their own copy.
 ## Monitoring: CloudWatch dashboards and alarms
 
 Step Functions, Firehose, and Redshift publish their metrics to CloudWatch
-at no charge, and two dashboards and two alarms fit the free tier in
+at no charge, and two dashboards and three alarms fit the free tier in
 commercial regions. CloudWatch is in both GovCloud regions, without
 dashboard sharing, so people sign in through IAM Identity Center and each
 role sees the dashboards it names. Nothing to run or patch.

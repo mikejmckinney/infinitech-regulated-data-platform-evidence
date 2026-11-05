@@ -1,6 +1,6 @@
 # Failure modes
 
-> 3 of the 25 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
+> 3 of the 26 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
 
 What IRDP failures look like, the first command to run, and what fixes
 them. Each entry links the procedure that goes further. The Airflow entries
@@ -17,8 +17,9 @@ entries, "Pods won't start", "A Helm release never finished installing",
 come from a live demo cycle; the rest haven't been seen live yet, and drill
 reviews will correct them.
 
-The Step Functions entries (2026-11-05) cover the default pipeline's two
-alarms (`dashboards.tf`).
+The Step Functions entries (2026-11-05) cover the default pipeline's
+alarms (`dashboards.tf`):
+two on runs, and a third on Firehose delivery, which no cycle has seen fire.
 The failed-run entry's redrive is what demo cycle 15's forced-failure drill
 did. The three after them, also 2026-11-05, were added because the code
 guards against them or a cycle showed them: a task that can't start, the

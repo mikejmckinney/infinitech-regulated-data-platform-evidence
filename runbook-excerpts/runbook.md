@@ -11,7 +11,8 @@ you: the reference comes with no on-call or 24x7 support.
 
 | Procedure | Use it when | Script | Tested live |
 | --- | --- | --- | --- |
-| [Fail over to the Azure standby](failover-to-azure.md) | AWS `us-east-1` is down, or a DR drill | `scripts/failover-azure-gov.sh` | No. Blocked until the Azure DR subscription, its Terraform root, and the lake copy job exist. Only the lake fails over |
+| [Recover in the second AWS region](recover-in-second-region.md) | The primary region is down: restore the copied backup, the default, or use the warm standby | | Drilled with `make demo-failover` in cycles 10, 11, 12 and 15, both paths recovered; the steps haven't been run by hand |
+| Fail over to the Azure standby | A deployment with cross-cloud recovery, built on request: AWS `us-east-1` is down, or a DR drill | `scripts/failover-azure-gov.sh` | No. Blocked until the Azure DR subscription, its Terraform root, and the lake copy job exist. Only the lake fails over |
 | [Rotate keys](rotate-keys.md) | The rotation schedule, a suspected leak, someone leaving, a handoff | `scripts/rotate-keys.sh` | No; not yet run in a demo cycle |
 | Scale Airflow | The queue keeps growing, or workers are Pending | `scripts/scale-airflow.sh` | No; not yet run in an Airflow cycle |
 | Review a chaos drill | Weekly, and after any drill | | No; drill records exist from cycles 3 and 4, but none has been reviewed with this procedure |

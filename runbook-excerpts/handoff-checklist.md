@@ -90,7 +90,8 @@ Infinitech watching but not typing. Record the run:
 
 | Procedure | Run by | Date | Evidence | Result |
 | --- | --- | --- | --- | --- |
-| [Fail over to the Azure standby](failover-to-azure.md) (blocked until the DR standby exists) | | | | |
+| [Recover in the second AWS region](recover-in-second-region.md) | | | | |
+| Fail over to the Azure standby (blocked until the DR standby exists) | | | | |
 | [Rotate keys](rotate-keys.md) | | | | |
 | Scale Airflow | | | | |
 | Review a chaos drill | | | | |
@@ -135,8 +136,6 @@ Known on 2026-11-02; add anything found since:
   ([AWS](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)).
   Keep secrets out of plain SSM parameters in that account, or turn the
   tunnel off (`node_ssm_tunnel`) where operators reach the API another way.
-- [ ] No runbook procedure yet for failing over to the second AWS region;
-  the drill is `make demo-failover` (`demo.md`).
 - [ ] Chaos Mesh drills run only on the Airflow alternative; the default
   Step Functions path has the forced-failure drills (`make demo-chaos`)
   (issue 121).

@@ -1,6 +1,6 @@
 # Failure modes
 
-> 3 of the 24 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
+> 3 of the 25 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
 
 What IRDP failures look like, the first command to run, and what fixes
 them. Each entry links the procedure that goes further. The Airflow entries

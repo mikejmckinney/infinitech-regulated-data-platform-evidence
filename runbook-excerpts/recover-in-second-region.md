@@ -12,6 +12,11 @@ keeps loaded, so it needs no restore. The demo's standby stack builds both
 has the default alone or both
 (`docs/stack-choices.md`).
 Recovery in Azure is a separate procedure, built on request.
+This
+procedure is for a deployment whose warehouse is Redshift, the default. One
+that runs Snowflake in Redshift's place has no built standby: Snowflake's
+replication and failover group aren't built, and the standby stack refuses
+a Snowflake core.
 
 **Status (2026-11-05):** drilled in demo cycles 10, 11, 12 and 15 with
 `make demo-failover`, which makes the AWS calls below against a primary

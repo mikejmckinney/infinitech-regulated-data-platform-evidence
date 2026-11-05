@@ -3,7 +3,7 @@
 IRDP's reference build on AWS, as demo cycle 15 ran it. Each part below
 says what it does and what the walkthrough shows of it.
 
-![IRDP architecture: message sources through Amazon Data Firehose and file sources straight to the S3 lake, the Step Functions pipeline, Redshift Serverless, read-only access and CloudWatch in us-east-1, with the alternatives dashed; the network paths to each warehouse; snapshot copies (the default), S3 replication and a warm standby in us-west-2; and the controls on every change](architecture.svg)
+![IRDP architecture: message sources through Amazon Data Firehose and file sources straight to the S3 lake, the Step Functions pipeline, Redshift Serverless, read-only access and CloudWatch in us-east-1, with the alternatives dashed; the VPC workload subnets that hold the pipeline and Redshift, with each network path labelled on its arrow; dotted lines from the components CloudWatch and Prometheus watch; snapshot copies (the default), S3 replication and a warm standby in us-west-2; and the controls on every change](architecture.svg)
 
 Cards with dashed borders are alternatives a deployment can switch on; the
 demo cycle and the walkthrough run the default path.

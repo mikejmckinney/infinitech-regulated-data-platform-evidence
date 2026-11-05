@@ -5,7 +5,7 @@
   "source": {
     "product": "Infinitech Regulated Data Platform",
     "repository_visibility": "private",
-    "product_commit": "d6bf931dc8f4a5c967927dac1e49a03d1d0fe78f"
+    "product_commit": "7409ed1966a3f93f004d329852dfa991f0aa7994"
   },
   "builder_sha256": "c234dabbe5bc0f19e76b08b230a2e77eb5b1b21d5970f63d3ebde9a549172d39",
   "implementation_included": false

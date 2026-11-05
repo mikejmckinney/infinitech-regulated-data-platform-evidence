@@ -36,7 +36,7 @@ State on 2026-11-02, and the state at handoff:
   re-created with deployment from `main` only, if the repository was forked.
 - [ ] **CI trust follows the repository.** The GitHub OIDC subjects the
   AWS roles trust name the repository's owner and IDs, for example
-  `repo:mikejmckinney@10391473/<repository>@1431765722:environment:demo-snowflake`.
+  `repo:<owner>@<owner id>/<repository>@<repository id>:environment:demo-snowflake`.
   After a transfer or fork, update every trust policy to the new subjects
   (`docs/oidc-trust-setup.md`), or CI can't sign in.
   Evidence: a green `plan-aws` run in the new repository.

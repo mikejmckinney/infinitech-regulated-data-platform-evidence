@@ -3,21 +3,10 @@
 IRDP's reference build on AWS, as demo cycle 15 ran it. Each part below
 says what it does and what the walkthrough shows of it.
 
-```mermaid
-flowchart LR
-  SRC[Sources] --> FH[Amazon Data Firehose]
-  FH --> LAND[(Landing bucket)]
-  subgraph pipeline["Step Functions, every 10 minutes"]
-    CUR[Curate task] --> LOAD[Load task] --> VER[Verify task]
-  end
-  LAND --> CUR
-  CUR --> CURATED[(Curated bucket)]
-  CUR --> QUAR[(Quarantine bucket)]
-  LOAD --> RS[(Redshift Serverless<br/>us-east-1)]
-  CURATED -- S3 replication --> CURW[(Curated copy<br/>us-west-2)]
-  CURW --> WARM[(Warm standby<br/>us-west-2)]
-  RS -- snapshot copy --> SNAP[(Snapshot copies<br/>us-west-2)]
-```
+![IRDP architecture: message sources through Amazon Data Firehose and file sources straight to the S3 lake, the Step Functions pipeline, Redshift Serverless, read-only access and CloudWatch in us-east-1, with the alternatives dashed; the VPC workload subnets that hold the pipeline and Redshift, with each network path labelled on its arrow; dotted lines from the components CloudWatch and Prometheus watch; snapshot copies (the default), S3 replication and a warm standby in us-west-2; and the controls on every change](architecture.svg)
+
+Cards with dashed borders are alternatives a deployment can switch on; the
+demo cycle and the walkthrough run the default path.
 
 ## Ingest
 
@@ -79,8 +68,10 @@ has the measured times.
 Two CloudWatch dashboards, one for health and one for operations, show how
 runs ended, how fresh the ingested data is, ingest volume, and warehouse
 capacity. Two alarms watch the pipeline: one for a failed run, one for no
-successful run in a set window. People open the dashboards through IAM
-Identity Center, and each role sees only the dashboards it names.
+successful run in a set window. With Firehose ingest a third fires when
+records wait too long for delivery to the lake. People open the dashboards
+through IAM Identity Center, and each role sees only the dashboards it
+names.
 
 ## Governed changes
 

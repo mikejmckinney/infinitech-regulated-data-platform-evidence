@@ -49,7 +49,9 @@ Two drills ended red before these, and each was fixed: in cycle 10 the
 first drill restored nothing because the primary had taken only one
 recovery point, so the drill now copies a snapshot it takes itself. In
 cycle 11 AWS refused a recovery point that wasn't yet available, so the
-drill now moves to the next newest one.
+drill now moves to the next newest one. That drill's snapshot copy took
+25.6 min, the longest of any drill. It isn't in the table, because AWS
+refused that drill's restore.
 
 ## Queries
 

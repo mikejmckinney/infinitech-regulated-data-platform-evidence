@@ -1,10 +1,10 @@
 {
   "component-definition": {
-    "uuid": "3406deaf-f85c-5525-8057-500566765d81",
+    "uuid": "2fe7ca1a-a1c8-59d9-8361-70ff2938c9a5",
     "metadata": {
       "title": "IRDP component definition: Step Functions pipeline that runs each step as a Fargate task",
-      "last-modified": "2026-10-31T20:31:34Z",
-      "version": "sha256-757506822020a91f",
+      "last-modified": "2026-11-05T04:32:15Z",
+      "version": "sha256-619845ea286bd90d",
       "oscal-version": "1.2.3",
       "props": [
         {
@@ -75,7 +75,7 @@
               {
                 "uuid": "a2044fcb-b7ed-50a4-ae19-bb6e5367f001",
                 "control-id": "ac-6",
-                "description": "Each identity holds only its own job. The execution role pulls the one task image and writes the tasks' log group. The worker role reads and writes the lake prefixes the steps use and reads the Snowflake key, decrypting it only through Secrets Manager. A separate producer role writes the synthetic input, so the pipeline can't write its own. With lake erasure on, a separate eraser role is the only one that may delete lake objects and their old versions, for delete requests; the worker never gets that policy. The Scheduler role may only start this state machine. Every role the module creates carries the workload permissions boundary.",
+                "description": "Each identity holds only its own job. The execution role pulls the one task image and writes the tasks' log group. The worker role reads and writes the lake prefixes the steps use and reaches the one warehouse the pipeline loads: Redshift through the Data API, or, when Snowflake replaces it, the Snowflake key, decrypted only through Secrets Manager. A separate producer role writes the synthetic input, so the pipeline can't write its own. With lake erasure on, a separate eraser role is the only one that may delete lake objects and their old versions, for delete requests; the worker never gets that policy. The Scheduler role may only start this state machine. Every role the module creates carries the workload permissions boundary.",
                 "props": [
                   {
                     "name": "control-title",
@@ -207,7 +207,7 @@
               {
                 "uuid": "2b693787-22af-556d-acf3-805026e7c583",
                 "control-id": "ia-5.7",
-                "description": "Redshift, which every run loads, takes no stored credential: the tasks call the Data API as the worker role, and Redshift maps that role to its database role from the role's RedshiftDbRoles tag. With Snowflake, tasks get the key's Secrets Manager ARN, not the key, and the worker role reads the secret when a step runs. The task definitions and the state machine hold no credential.",
+                "description": "A deployment loads one warehouse. Redshift takes no stored credential: the tasks call the Data API as the worker role, and Redshift maps that role to its database role from the role's RedshiftDbRoles tag. When Snowflake replaces it, tasks get the key's Secrets Manager ARN, not the key, and the worker role reads the secret when a step runs. The task definitions and the state machine hold no credential.",
                 "props": [
                   {
                     "name": "control-title",

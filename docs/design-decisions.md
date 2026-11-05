@@ -52,8 +52,12 @@ Copied snapshots carry the whole database, including what people build in
 the warehouse, and cost the least. Drills restored them in 7.3 to 8.2
 minutes. Their recovery point in production is the newest recovery point
 (Redshift Serverless takes one about every 30 minutes) plus the copy's trip
-to the second region, which took 3.6 to 25.6 minutes in the drills. AWS
-states no upper bound for that trip.
+to the second region. That trip took up to 25.6 minutes across the five
+drills that copied a snapshot, and 3.6 to 24.1 minutes in the four that
+went on to restore it, which the
+[results](../evidence/results.md#failover-drills-across-cycles) list. The
+25.6 was cycle 11's first drill, whose restore AWS refused. AWS states no
+upper bound for the trip.
 
 The warm standby recovered in 1.8 to 2.7 minutes with nothing lost in every
 drill. It holds the pipeline's tables only, so tables people build by hand
@@ -62,7 +66,7 @@ need their own copy.
 ## Monitoring: CloudWatch dashboards and alarms
 
 Step Functions, Firehose, and Redshift publish their metrics to CloudWatch
-at no charge, and two dashboards and two alarms fit the free tier in
+at no charge, and two dashboards and three alarms fit the free tier in
 commercial regions. CloudWatch is in both GovCloud regions, without
 dashboard sharing, so people sign in through IAM Identity Center and each
 role sees the dashboards it names. Nothing to run or patch.

@@ -13,7 +13,7 @@ them before handing it over.
 | Network | Your VPC layout, private connectivity, and the endpoints your sources and readers use |
 | Sources | Firehose for message sources, plain S3 for file sources, SFTP or Kafka where you need them |
 | Keys and classification | One customer-managed KMS key per data classification you use, and the tags your controls require |
-| Policy gate | The four reference rules plus your own controls, checked on every pull request and before every apply |
+| Policy gate | The five reference rules plus your own controls, checked on every pull request and before every apply |
 | Recovery | Snapshot copies, a warm standby, or both, sized to your recovery time and recovery point objectives, with a drill to measure them |
 | Monitoring | Dashboards and alarms for your runs, freshness, volume, and capacity, routed to your on-call |
 

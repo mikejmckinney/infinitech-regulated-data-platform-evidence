@@ -46,6 +46,13 @@ State on 2026-11-02, and the state at handoff:
   `irdp-demo` cluster, which `scale-airflow.sh` uses unless told otherwise
   (`scripts/scale-airflow.sh status --cluster <cluster name>`). Replace them
   with the customer's values, or pass the customer's on each command.
+- [ ] **Alarms reach the customer.** `ALARM_EMAIL` names a customer
+  address, and `PAGERDUTY_INTEGRATION_URL` is the customer's service or
+  deleted. After a fork, the pipeline module's `runbook_url` points at the
+  new repository's [`runbook/failure-modes.md`](failure-modes.md); a transferred repository's
+  old links redirect. Evidence: a `set-alarm-state` test that reaches the
+  customer's on-call tool
+  (`observability.md`).
 - [ ] **AWS:** the organization's management account and the IRDP accounts
   (IMCLZ) under the customer's control, root user credentials and MFA
   devices handed over in person.

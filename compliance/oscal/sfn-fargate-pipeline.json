@@ -3,7 +3,7 @@
     "uuid": "2fe7ca1a-a1c8-59d9-8361-70ff2938c9a5",
     "metadata": {
       "title": "IRDP component definition: Step Functions pipeline that runs each step as a Fargate task",
-      "last-modified": "2026-11-05T04:32:15Z",
+      "last-modified": "2026-11-07T15:46:03Z",
       "version": "sha256-619845ea286bd90d",
       "oscal-version": "1.2.3",
       "props": [

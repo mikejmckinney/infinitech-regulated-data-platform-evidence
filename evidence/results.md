@@ -24,8 +24,8 @@ cycle the videos were recorded on.
 | Alarm | `irdp-demo-sfn-run-failed` went into alarm 25 seconds after the run failed; `irdp-demo-sfn-no-successful-run` stayed OK | CloudWatch alarm history, 23:34:14 UTC |
 | Read-only role | A presenter signed in to Query editor v2 through IAM Identity Center. `SELECT` returned the first batch's 49,500 events; `DELETE FROM analytics.events` failed with "permission denied for relation events" | Recorded in the walkthrough |
 | Snapshot copy | Arrived in us-west-2 18.6 minutes after the snapshot was taken | Snapshot run 41741392524 |
-| Warm standby | Recovered in 2.1 minutes with an RPO of 0: 2 of 2 curated files loaded, 99,000 events against the primary's 99,000 | [`runs/failover-drill.txt`](runs/failover-drill.txt) |
-| Snapshot restore | Recovered in 8.2 minutes with an RPO of 20.8 minutes; the restore itself took 5.8 minutes and brought back 99,000 events | [`runs/failover-drill.txt`](runs/failover-drill.txt) |
+| Snapshot restore (default) | Recovered in 8.2 minutes with an RPO of 20.8 minutes; the restore itself took 5.8 minutes and brought back 99,000 events | [`runs/failover-drill.txt`](runs/failover-drill.txt) |
+| Warm standby (option) | Recovered in 2.1 minutes with an RPO of 0: 2 of 2 curated files loaded, 99,000 events against the primary's 99,000 | [`runs/failover-drill.txt`](runs/failover-drill.txt) |
 | Teardown | 294 resources destroyed across three stacks (27, 133, and 134), each destroy plan read before it ran. The zero-resource report found nothing billable in either region; three Redshift recovery points remained, which AWS deletes within a day | [`runs/zero-resource-report.txt`](runs/zero-resource-report.txt), run 41758199785 |
 
 The snapshot restore's RPO is the age of the snapshot the drill took
@@ -35,12 +35,12 @@ copy takes to reach the second region.
 
 ## Failover drills across cycles
 
-| Cycle | Events in the warehouse | Warm standby: RTO, RPO | Snapshot restore: RTO, RPO | Snapshot copy took |
+| Cycle | Events in the warehouse | Snapshot restore (default): RTO, RPO | Warm standby (option): RTO, RPO | Snapshot copy took |
 | --- | ---: | --- | --- | --- |
-| 10 | 4,950 | 2.7 min, 0 | 8.1 min, 7.3 min | 6.3 min |
-| 11 | 2,475,000 | 1.8 min, 0 | 7.3 min, 25.1 min | 24.1 min |
-| 12 (8 RPU) | 990,000 | 2.0 min, 0 | 7.3 min, 7.4 min | 3.6 min |
-| 15 | 99,000 | 2.1 min, 0 | 8.2 min, 20.8 min | 18.6 min |
+| 10 | 4,950 | 8.1 min, 7.3 min | 2.7 min, 0 | 6.3 min |
+| 11 | 2,475,000 | 7.3 min, 25.1 min | 1.8 min, 0 | 24.1 min |
+| 12 (8 RPU) | 990,000 | 7.3 min, 7.4 min | 2.0 min, 0 | 3.6 min |
+| 15 | 99,000 | 8.2 min, 20.8 min | 2.1 min, 0 | 18.6 min |
 
 The copy's time doesn't follow the data's size. In each snapshot drill
 the RPO is mostly the time spent waiting for the copy.

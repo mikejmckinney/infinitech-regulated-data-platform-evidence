@@ -76,4 +76,4 @@ role sees the dashboards it names. Nothing to run or patch.
 Plans are checked by Open Policy Agent rules before anything changes, on
 pull requests and again before each apply. The apply runs only the plan a
 person reviewed, matched by checksum. The rules a customer gets start from
-the four in the reference build and grow with the customer's own controls.
+the five in the reference build and grow with the customer's own controls.

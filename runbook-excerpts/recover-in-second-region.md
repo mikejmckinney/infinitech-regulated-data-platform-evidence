@@ -18,19 +18,27 @@ that runs Snowflake in Redshift's place has no built standby: Snowflake's
 replication and failover group aren't built, and the standby stack refuses
 a Snowflake core.
 
-**Status (2026-11-05):** drilled in demo cycles 10, 11, 12 and 15 with
+**Status (2026-11-08):** drilled in demo cycles 10, 11, 12, 15 and 16 with
 `make demo-failover`, which makes the AWS calls below against a primary
 whose schedule it stopped, not a region that's down. The snapshot restore
 recovered in 7.3 to 8.2 min and the warm standby in 1.8 to 2.7 min, with
 every event back on both
 (`docs/demo-results.md`).
-Nobody has run these steps by hand.
+In cycle 16
 `scripts/recover-second-region.py`
-runs them ([With the script](#with-the-script)), and it hasn't run live:
-it and `scripts/standby-files.sh`, which
-verification uses, are tested against fake AWS calls only. Its backup
-choice and restore calls are the drill's
-(`scripts/second_region.py`).
+`both` ([With the script](#with-the-script)) ran every step and check on
+this page live, from the `demo-sfn-ops` `recover` action, which answers
+step 1's `done` itself. The us-east-1 primary was declared
+lost, not down: the loss check read its curated bucket. Step 2 picked the
+newest copied backup, a drill snapshot 73.5 min old at T0; the restore was
+`AVAILABLE` again 5.2 min after the call, with 9,899 events. The warm
+standby's extra run succeeded with 9,899 events, and
+`scripts/standby-files.sh` found no backlog
+and all 2 curated files the primary wrote by T0 loaded
+(`docs/demo-results.md`).
+The 5.2 min starts at the restore call, so it isn't an RTO. Nobody has run
+these steps by hand, and no live run has met a primary bucket it couldn't
+list (exit 3).
 
 ## What comes back
 
@@ -116,6 +124,14 @@ The script reads `dr-outputs.json` as it is, so keep the whole file.
    "Recovery point … is not in available state" means AWS listed a copy
    it can't restore from yet. Use the next newest; cycle 11's drill met
    one 5 minutes old.
+
+   "ConflictException … being modified by a concurrent operation" means
+   the target namespace or workgroup was busy, not that the backup was
+   refused. Wait until `get-namespace` (step 4) and `get-workgroup` (step
+   7) both show `AVAILABLE`, then run the same restore again. Cycle 16's
+   first drill met this with an empty target, and a run 10 minutes later
+   restored normally; the cause isn't known. The script does this itself,
+   up to 4 calls within 10 minutes, then stops.
 4. **Wait for the restore.** The namespace leaves `AVAILABLE` and comes
    back to it; the restore itself took 4.9 to 5.8 min in the drills:
 
@@ -205,9 +221,11 @@ Control replicates 99.9% of new objects within 15 minutes, so the files
 most likely missing are the last ones written before the outage.
 
 **The loss, once the primary's curated bucket can be listed again:** the
-comparison the drill makes. Every curated file the primary wrote up to
-T0, less the ones the standby loaded, is what it lost, and T0 less the
-oldest one's write time is the RPO:
+check the drill runs for its warm standby's RPO. Every curated file the
+primary wrote up to T0, less the ones the standby loaded, is what it lost,
+and T0 less the oldest one's write time is the RPO. A curated file is one
+a load takes: anything else under `events/v1/` never loads in either
+region, so it isn't counted.
 
 ```bash
 scripts/standby-files.sh loss --secret-arn <standby secret arn> --primary-bucket <primary curated bucket> --t0 <T0, such as 2026-11-05T12:00:00Z>
@@ -216,6 +234,14 @@ scripts/standby-files.sh loss --secret-arn <standby secret arn> --primary-bucket
 It prints the files lost and the RPO, or that nothing was lost. The
 reference keeps no S3 Inventory report of the curated bucket, so this
 waits for the primary region.
+
+"All 0 curated file(s) ... nothing lost" means nothing lost only if the
+primary's warehouse held no events by T0 either.
+Count `analytics.events` in `irdp-demo`: with events there, the curated
+files are missing or the listing was wrong, and the loss is unknown. A
+count that fails or comes back empty isn't zero. The script reads no
+primary count, so it reports this case as loss unknown (exit 3) and says
+to count; the failover drill reads the count at t_fail and does the same.
 
 ## Failback
 

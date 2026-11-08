@@ -87,7 +87,9 @@ rejects a plan that:
 - leaves a data resource without a customer-managed key;
 - lacks a valid data classification tag;
 - uses a region outside the approved profile (commercial demo regions, or
-  GovCloud).
+  GovCloud);
+- has a resource policy that opens a topic, bucket, queue, or key to every
+  AWS account.
 
 ## Teardown
 

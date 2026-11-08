@@ -8,7 +8,7 @@ are copied from that runbook.
 | File | What's in it |
 | --- | --- |
 | [`runbook.md`](runbook.md) | The runbook's front page: the procedures, when to use each, whether each has run live, who may run which step, and the tools an operator needs |
-| [`recover-in-second-region.md`](recover-in-second-region.md) | The whole procedure for bringing the warehouse back in the second AWS region when the primary is down: restoring the newest copied backup (the default) or switching to the warm standby (an option), how to verify each, and failback. The failover drills of demo cycles 10, 11, 12 and 15 ran its calls |
+| [`recover-in-second-region.md`](recover-in-second-region.md) | The whole procedure for bringing the warehouse back in the second AWS region when the primary is down: restoring the newest copied backup (the default) or switching to the warm standby (an option), how to verify each, and failback. The failover drills of demo cycles 10, 11, 12, 15 and 16 ran its calls, and in cycle 16 its script ran every step live |
 | [`rotate-keys.md`](rotate-keys.md) | The whole key rotation procedure: the KMS keys, the Snowflake service users' key pairs (with no sign-in gap while the pipeline runs), the Entra client secrets, Airflow's generated secrets, and the quarterly review of who CI trusts. None of it has run live yet |
 | [`failure-modes.md`](failure-modes.md) | Three entries from the failure-mode catalog, each with the signal, the first command to run, and the fix: a failed Step Functions run and its redrive, no successful run in 30 minutes, and a pipeline task that can't start because its image or its network path to ECR is gone |
 | [`handoff-checklist.md`](handoff-checklist.md) | The whole handoff checklist: eight steps, the evidence that closes each, every credential to rotate, the open items on the day, and the sign-off |
@@ -28,13 +28,17 @@ longer matches the code.
 
 ## The recovery drills
 
-The walkthrough's failover is one of those drills: the warm standby
-recovered in 2.1 minutes with nothing lost, and the snapshot restore in
-8.2 ([run record](../evidence/runs/failover-drill.txt),
-[all drills](../evidence/results.md#failover-drills-across-cycles)). A
-drill stops the primary's schedule rather than losing the region, and a
-script runs it; the procedure's steps haven't been run by hand, and the
-script that runs them hasn't run live.
+The walkthrough's failover is one of those drills: the snapshot restore, the
+default, recovered in 8.2 minutes, and the warm standby in 2.1 with nothing
+lost ([run record](../evidence/runs/failover-drill.txt), [all
+drills](../evidence/results.md#failover-drills-across-cycles)). A drill
+stops the primary's schedule rather than losing the region, and a script
+runs it. In cycle 16 the script that runs the procedure's steps also ran
+live, against a primary declared lost rather than a region that was down: it
+restored the newest copied backup, back 5.2 minutes after the restore call
+with 9,899 events, and found every curated file the primary wrote before the
+declared outage loaded in the warm standby. Nobody has run the steps by
+hand.
 
 ## What comes with a deployment
 

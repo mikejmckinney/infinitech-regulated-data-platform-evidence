@@ -1,6 +1,6 @@
 # Failure modes
 
-> 3 of the 26 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
+> 3 of the 27 entries in `runbook/failure-modes.md`, the runbook's failure-mode catalog, copied from the IRDP product. [What was changed](README.md#what-was-changed).
 
 What IRDP failures look like, the first command to run, and what fixes
 them. Each entry links the procedure that goes further. The Airflow entries
@@ -19,16 +19,26 @@ reviews will correct them.
 
 The Step Functions entries (2026-11-05) cover the default pipeline's
 alarms (`dashboards.tf`):
-two on runs, and a third on Firehose delivery, which no cycle has seen fire.
+two on runs, and a third on Firehose delivery, which demo cycle 16 fired
+with a deny on the delivery role.
 The failed-run entry's redrive is what demo cycle 15's forced-failure drill
 did. The three after them, also 2026-11-05, were added because the code
 guards against them or a cycle showed them: a task that can't start, the
 daily RPU-hour limit, and runs over the 300 s target. None of the three has
 been worked through live with these commands.
 
+Each Step Functions alarm's description links its entry by the anchor
+under its heading, named after the alarm (`#run-failed`,
+`#no-successful-run`, `#firehose-not-delivering`), so a renamed heading
+keeps the link;
+`modules/orchestration/sfn-fargate-pipeline/tests/test_alarms.py` fails if
+one goes missing.
+
 ## Step Functions pipeline
 
 ### A Step Functions run failed
+
+<a id="run-failed"></a>
 
 - **Signal:** `irdp-demo-sfn-run-failed`: a run of `irdp-demo-sfn-pipeline`
   failed in the last 10 minutes. Each step is tried three times, a minute
@@ -78,10 +88,17 @@ been worked through live with these commands.
 
 ### No successful run in 30 minutes
 
+<a id="no-successful-run"></a>
+
 - **Signal:** `irdp-demo-sfn-no-successful-run`: no run succeeded in three
-  10-minute periods. Missing data counts as breaching, so it also fires
-  when no run starts at all. Right after `make demo-up` it's in alarm until
-  the first run succeeds; that's expected.
+  10-minute periods in a row, so the last success was 20 to 40 minutes
+  ago. A period without a success counts as 0, so it also fires when no
+  run starts at all. Periods from before the stack was applied count as
+  successes: after `make demo-up` it should stay OK while the first run is
+  due, and fire if no run has succeeded 20 to 40 minutes after the apply.
+  Cycle 17 checks both timings; until then an ALARM minutes after
+  `make demo-up` that clears after the first run is the known issue 236,
+  not an outage.
 - **First command:** the schedule's state, then the latest runs, with
   `$machine` found as in the entry above:
 

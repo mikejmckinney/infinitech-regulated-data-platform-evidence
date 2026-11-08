@@ -3,7 +3,7 @@
     "uuid": "5c8e7e4a-5072-5899-9403-5bcb3b376f31",
     "metadata": {
       "title": "IRDP component definition: KMS customer-managed keys per data classification",
-      "last-modified": "2026-10-25T02:18:28Z",
+      "last-modified": "2026-11-07T15:46:03Z",
       "version": "sha256-883199af403975c0",
       "oscal-version": "1.2.3",
       "props": [

@@ -5,8 +5,8 @@
 Infinitech's Regulated Data Platform is a reference implementation for teams
 that move sensitive records through AWS. Records arrive through Firehose, land
 in an encrypted lake, and load into Redshift Serverless, with backups copied to
-a second region. Everything in this walkthrough was recorded live, on one demo
-cycle.
+a second region. Everything in this walkthrough was recorded live, on two demo
+cycles.
 
 ## Governed deployment
 
@@ -64,6 +64,16 @@ read the analytics tables: the three event types add up to all forty-nine
 thousand five hundred events. When the same user tries to delete them, Redshift
 refuses with permission denied.
 
+## Deletion and erasure
+
+A delete has to reach every copy of a record. Here a delete request for one
+synthetic subject removed its row from the warehouse, and the erase run then
+cleaned both lakes. In us-east-1, the eraser rewrote two files and deleted two
+old versions, and its check found the subject in none of the three versions it
+read. The standby's lake in us-west-2 has its own eraser. It deleted one
+version, and its check came back clean. In the standby's bucket, that file now
+has a single version, with no older copy left.
+
 ## Failure and redrive
 
 The drill stopped the Curate task three times in a row. Step Functions retried it twice, then marked the run failed.
@@ -79,6 +89,18 @@ failure shows as a spike. The run-failed alarm fired less than a minute later,
 and the alarm for no successful run stayed quiet, because the redrive
 succeeded.
 
+## Alerting
+
+Every pipeline alarm has an alarm action and an OK action, and a description
+with its severity, its impact, a runbook link and a dashboard. To test the
+Firehose alarm, we blocked Firehose from writing to the landing bucket. Once a
+record had waited more than thirty minutes, the alarm fired. The email arrived
+in the same second, and PagerDuty opened an incident one second later, with the
+same description. Someone on call acknowledged it. After the block was lifted
+and the held records were delivered, CloudWatch sent OK, and the incident
+resolved itself. Pages go to the customer's own on-call, through any tool that
+subscribes to the alarm topic.
+
 ## Recovery copies
 
 For disaster recovery, snapshots of the warehouse are copied from us-east-1 to
@@ -88,10 +110,11 @@ in us-west-2 as well, kept loaded from the curated files that replicate there.
 ## Failover drill
 
 Then we failed over. The drill stopped the primary's pipeline and timed two
-paths. The warm standby held all ninety-nine thousand events two point one
-minutes after the failure, with no data lost. Restoring the copied snapshot
-took eight point two minutes. Its twenty point eight minute data-loss window is
-the age of the snapshot the drill restored.
+paths. The default restores the copied snapshot: the warehouse answered
+queries again eight point two minutes after the failure, and its twenty point
+eight minute data-loss window is the age of the snapshot the drill restored.
+The warm standby option held all ninety-nine thousand events two point one
+minutes after the failure, with no data lost.
 
 ## Teardown
 

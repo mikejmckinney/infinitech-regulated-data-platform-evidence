@@ -1,334 +1,422 @@
 WEBVTT
 
 1
-00:00:01.270 --> 00:00:06.110
+00:00:01.040 --> 00:00:05.710
 Infinitech's Regulated Data Platform is a
 reference implementation for teams that
 
 2
-00:00:06.120 --> 00:00:11.570
+00:00:05.710 --> 00:00:10.680
 move sensitive records through AWS.
 Records arrive through Firehose, land in
 
 3
-00:00:11.570 --> 00:00:16.760
+00:00:10.680 --> 00:00:15.650
 an encrypted lake, and load into Redshift
 Serverless, with backups copied to a
 
 4
-00:00:17.180 --> 00:00:21.150
+00:00:15.650 --> 00:00:19.640
 second region. Everything in this
-walkthrough was recorded live, on one
+walkthrough was recorded live, on two
 
 5
-00:00:21.150 --> 00:00:22.000
-demo cycle.
+00:00:19.640 --> 00:00:20.680
+demo cycles.
 
 6
-00:00:24.942 --> 00:00:28.682
-The platform is Terraform,
-applied in two steps.
+00:00:23.034 --> 00:00:28.514
+The platform is Terraform, applied in
+two steps. A prepare run plans the core
 
 7
-00:00:28.682 --> 00:00:32.332
-A prepare run plans the core
+00:00:28.874 --> 00:00:33.264
 stack, here one hundred thirty-four
+resources, and runs the policy gate
 
 8
-00:00:32.902 --> 00:00:37.332
-resources, and runs the policy gate
+00:00:33.264 --> 00:00:38.434
 against that plan. It saves the plan
+with checksums. A person reads the saved
 
 9
-00:00:37.332 --> 00:00:42.152
-with checksums. A person reads the saved
+00:00:38.434 --> 00:00:42.254
 plan before anything changes.
+The execute run then checks those
 
 10
-00:00:42.152 --> 00:00:45.932
-The execute run then checks those
-checksums and applies that
+00:00:42.614 --> 00:00:46.914
+checksums and applies that exact
+plan, so what was reviewed is what gets
 
 11
-00:00:46.392 --> 00:00:49.182
-exact plan, so what was reviewed is what
-gets built.
+00:00:47.274 --> 00:00:47.594
+built.
 
 12
-00:00:51.912 --> 00:00:56.152
+00:00:49.956 --> 00:00:54.116
 To show the gate stopping a bad change,
 we opened a pull request that makes the
 
 13
-00:00:56.152 --> 00:01:00.532
+00:00:54.116 --> 00:00:58.986
 Redshift workgroup publicly accessible.
 Terraform plans the change.
 
 14
-00:01:00.532 --> 00:01:04.582
+00:00:59.076 --> 00:01:03.556
 The policy gate rejects it: its
 no-public-resources rule names the
 
 15
-00:01:04.582 --> 00:01:08.922
+00:01:03.556 --> 00:01:08.276
 workgroup and fails the check, so the
 change cannot merge. The same gate
 
 16
-00:01:08.922 --> 00:01:13.812
+00:01:08.276 --> 00:01:13.496
 requires customer-managed keys, data
 classification tags, and approved regions,
 
 17
-00:01:13.812 --> 00:01:16.602
-and it runs on pull requests
-and before every apply.
+00:01:13.576 --> 00:01:16.856
+and it runs on pull requests and before
+every apply.
 
 18
-00:01:19.372 --> 00:01:23.272
+00:01:19.238 --> 00:01:23.148
 Records arrive through Amazon
 Data Firehose. This load sent fifty
 
 19
-00:01:23.272 --> 00:01:28.172
+00:01:23.148 --> 00:01:28.638
 thousand generated test events, five
 hundred of them malformed on purpose.
 
 20
-00:01:28.492 --> 00:01:32.142
+00:01:28.678 --> 00:01:32.488
 Firehose buffers them for up to sixty
 seconds, then writes them to the
 
 21
-00:01:32.142 --> 00:01:36.122
+00:01:32.488 --> 00:01:36.258
 landing bucket. There are no servers to
 run, and the stream's error log
 
 22
-00:01:36.122 --> 00:01:37.022
+00:01:36.258 --> 00:01:37.118
 stayed empty.
 
 23
-00:01:39.786 --> 00:01:45.256
-The lake has three zones, each its
-own bucket. Landing keeps what arrived,
+00:01:39.470 --> 00:01:42.880
+The lake has three zones,
+each its own bucket.
 
 24
-00:01:45.256 --> 00:01:49.586
+00:01:42.950 --> 00:01:46.480
+Landing keeps what arrived,
 exactly as it arrived.
-Curated holds the validated records,
 
 25
-00:01:49.586 --> 00:01:54.426
-beside the manifest each Redshift
-load used. Quarantine keeps the records
+00:01:46.550 --> 00:01:50.400
+Curated holds the validated
+records, beside the manifest each
 
 26
-00:01:54.426 --> 00:01:58.706
-that failed validation for review:
-here, the five hundred bad events from
+00:01:50.660 --> 00:01:55.520
+Redshift load used. Quarantine keeps the
+records that failed validation for review:
 
 27
-00:01:58.956 --> 00:02:04.056
-each batch. Every bucket is versioned and
-encrypted with a customer-managed key.
+00:01:55.630 --> 00:01:58.620
+here, the five hundred bad
+events from each batch.
 
 28
-00:02:06.668 --> 00:02:10.468
+00:01:58.930 --> 00:02:02.560
+Every bucket is versioned and
+encrypted with a customer-managed key.
+
+29
+00:02:05.024 --> 00:02:09.424
 Every ten minutes, a Step Functions state
 machine looks for new data.
 
-29
-00:02:10.468 --> 00:02:15.398
+30
+00:02:09.424 --> 00:02:14.464
 Each step is a short-lived Fargate task.
 Curate validates the records and
 
-30
-00:02:15.398 --> 00:02:20.498
+31
+00:02:14.464 --> 00:02:19.024
 splits them. Load copies them into
 Redshift and merges them, so a replayed
 
-31
-00:02:20.588 --> 00:02:24.618
+32
+00:02:19.024 --> 00:02:23.624
 file adds no rows.
 Verify checks the tables: one row per
 
-32
-00:02:24.808 --> 00:02:30.198
+33
+00:02:23.624 --> 00:02:28.754
 event, and no extra rows from a replay.
 This run took about four minutes, and all
 
-33
-00:02:30.198 --> 00:02:35.138
+34
+00:02:28.824 --> 00:02:32.334
 seven checks passed on forty-nine thousand
 five hundred events.
 
-34
-00:02:36.882 --> 00:02:42.612
+35
+00:02:34.846 --> 00:02:40.036
 The warehouse is Redshift Serverless at
 four RPUs, and its compute is billed only
 
-35
-00:02:42.612 --> 00:02:46.412
+36
+00:02:40.036 --> 00:02:43.956
 while it runs queries.
 It sits in private subnets with public
 
-36
-00:02:46.412 --> 00:02:50.952
+37
+00:02:44.136 --> 00:02:48.196
 access turned off. The policy gate checks
 those settings on every plan.
 
-37
-00:02:53.764 --> 00:02:58.644
+38
+00:02:50.830 --> 00:02:55.550
 People who need to see the data get
 a read-only role. This presenter signs in
 
-38
-00:02:58.644 --> 00:03:02.804
+39
+00:02:55.550 --> 00:02:59.900
 to Query editor through single sign-on,
 with no database password.
 
-39
-00:03:02.804 --> 00:03:07.774
+40
+00:03:00.000 --> 00:03:04.700
 The role can read the analytics tables:
 the three event types add up to all
 
-40
-00:03:07.774 --> 00:03:12.534
+41
+00:03:04.700 --> 00:03:09.330
 forty-nine thousand five hundred events.
 When the same user tries to delete them,
 
-41
-00:03:12.534 --> 00:03:15.254
+42
+00:03:09.330 --> 00:03:12.110
 Redshift refuses with permission denied.
 
-42
-00:03:17.868 --> 00:03:21.388
+43
+00:03:14.542 --> 00:03:19.652
+A delete has to reach every copy of
+a record. Here a delete request for one
+
+44
+00:03:19.652 --> 00:03:24.742
+synthetic subject removed its row from the
+warehouse, and the erase run then cleaned
+
+45
+00:03:24.802 --> 00:03:31.412
+both lakes. In us-east-1, the eraser
+rewrote two files and deleted two old
+
+46
+00:03:31.582 --> 00:03:36.392
+versions, and its check found the subject
+in none of the three versions it read.
+
+47
+00:03:36.422 --> 00:03:42.042
+The standby's lake in us-west-2 has its
+own eraser. It deleted one version, and
+
+48
+00:03:42.082 --> 00:03:46.072
+its check came back clean.
+In the standby's bucket, that file now has
+
+49
+00:03:46.072 --> 00:03:48.912
+a single version, with no older copy left.
+
+50
+00:03:51.282 --> 00:03:54.722
 The drill stopped the Curate task three
 times in a row.
 
-43
-00:03:21.388 --> 00:03:25.398
+51
+00:03:54.802 --> 00:03:58.762
 Step Functions retried it twice, then
 marked the run failed.
 
-44
-00:03:25.398 --> 00:03:29.758
+52
+00:03:58.842 --> 00:04:02.872
 The run was then redriven from the failed
 step, without starting over, and it
 
-45
-00:03:29.808 --> 00:03:34.118
+53
+00:04:03.112 --> 00:04:07.502
 finished green. Start to finish took six
 minutes and forty-two seconds, and the
 
-46
-00:03:34.688 --> 00:03:37.598
+54
+00:04:07.502 --> 00:04:09.982
 execution's event log keeps every attempt.
 
-47
-00:03:39.970 --> 00:03:44.630
+55
+00:04:12.362 --> 00:04:16.742
 Two CloudWatch dashboards cover health and
 operations: how runs ended,
 
-48
-00:03:44.980 --> 00:03:49.970
+56
+00:04:17.042 --> 00:04:22.062
 how fresh the ingested data is, ingest
 volume, and warehouse capacity.
 
-49
-00:03:49.970 --> 00:03:54.670
+57
+00:04:22.242 --> 00:04:26.682
 The forced failure shows as a spike.
 The run-failed alarm fired less than a
 
-50
-00:03:54.670 --> 00:03:58.910
-minute later, and the alarm for no
-successful run stayed quiet, because the
+58
+00:04:26.682 --> 00:04:30.132
+minute later, and the
+alarm for no successful run stayed quiet,
 
-51
-00:03:58.910 --> 00:03:59.930
-redrive succeeded.
+59
+00:04:30.132 --> 00:04:31.952
+because the redrive succeeded.
 
-52
-00:04:02.860 --> 00:04:07.870
+60
+00:04:34.474 --> 00:04:39.814
+Every pipeline alarm has an alarm action
+and an OK action, and a description with
+
+61
+00:04:39.814 --> 00:04:44.584
+its severity, its impact, a runbook link
+and a dashboard. To test the
+
+62
+00:04:45.054 --> 00:04:47.894
+Firehose alarm, we blocked
+Firehose from writing to the
+
+63
+00:04:47.894 --> 00:04:52.814
+landing bucket. Once a record had waited
+more than thirty minutes, the alarm fired.
+
+64
+00:04:52.874 --> 00:04:56.634
+The email arrived in the same second, and
+PagerDuty opened an incident
+
+65
+00:04:57.114 --> 00:05:00.384
+one second later, with the
+same description. Someone on call
+
+66
+00:05:00.384 --> 00:05:04.114
+acknowledged it. After the block was
+lifted and the held records were
+
+67
+00:05:04.114 --> 00:05:09.264
+delivered, CloudWatch sent OK, and the
+incident resolved itself. Pages go to the
+
+68
+00:05:09.354 --> 00:05:13.694
+customer's own on-call, through any tool
+that subscribes to the alarm topic.
+
+69
+00:05:16.158 --> 00:05:20.228
 For disaster recovery, snapshots of the
-warehouse are copied from us-east-1
+warehouse are copied from
 
-53
-00:04:08.080 --> 00:04:12.770
-to us-west-2. This copy arrived about
-nineteen minutes after the snapshot
+70
+00:05:20.888 --> 00:05:26.068
+us-east-1 to us-west-2. This copy arrived
+about nineteen minutes after the snapshot
 
-54
-00:04:12.800 --> 00:04:18.620
+71
+00:05:26.068 --> 00:05:31.038
 was taken. A warm standby workgroup
 waits in us-west-2 as well, kept loaded
 
-55
-00:04:18.620 --> 00:04:20.620
+72
+00:05:31.108 --> 00:05:33.488
 from the curated files that
 replicate there.
 
-56
-00:04:23.472 --> 00:04:27.412
+73
+00:05:35.810 --> 00:05:39.690
 Then we failed over.
 The drill stopped the primary's pipeline
 
-57
-00:04:27.552 --> 00:04:31.092
+74
+00:05:39.690 --> 00:05:43.080
 and timed two paths.
-The warm standby held all ninety-nine
+The default restores the copied
 
-58
-00:04:31.092 --> 00:04:36.302
-thousand events two point one minutes
+75
+00:05:43.550 --> 00:05:46.910
+snapshot: the warehouse answered queries
+again eight point two minutes
+
+76
+00:05:47.250 --> 00:05:50.800
+after the failure, and its
+twenty point eight minute data-loss window
+
+77
+00:05:50.870 --> 00:05:54.150
+is the age of the snapshot the
+drill restored. The warm standby
+
+78
+00:05:54.670 --> 00:05:58.010
+option held all ninety-nine thousand
+events two point one minutes
+
+79
+00:05:58.570 --> 00:06:00.760
 after the failure, with no data lost.
 
-59
-00:04:36.582 --> 00:04:39.912
-Restoring the copied snapshot
-took eight point two minutes.
-
-60
-00:04:39.912 --> 00:04:43.852
-Its twenty point eight minute data-loss
-window is the age of the snapshot the
-
-61
-00:04:43.932 --> 00:04:45.002
-drill restored.
-
-62
-00:04:47.672 --> 00:04:52.672
+80
+00:06:03.272 --> 00:06:08.452
 Every demo cycle ends by tearing it all
 down: two hundred ninety-four resources
 
-63
-00:04:52.672 --> 00:04:57.392
+81
+00:06:08.452 --> 00:06:12.692
 across three stacks, each destroy plan
 read before it ran.
 
-64
-00:04:57.402 --> 00:05:02.522
+82
+00:06:12.692 --> 00:06:17.192
 A zero-resource report then checks
 both regions. It found nothing billable
 
-65
-00:05:02.522 --> 00:05:03.892
+83
+00:06:17.192 --> 00:06:18.292
 left from the demo.
 
-66
-00:05:06.404 --> 00:05:10.894
+84
+00:06:20.702 --> 00:06:24.832
 Infinitech stands the platform up in your
 AWS accounts and hands it over,
 
-67
-00:05:11.214 --> 00:05:15.714
+85
+00:06:25.322 --> 00:06:29.622
 with the repository, the runbook, and the
 evidence from your own drills.
 
-68
-00:05:15.714 --> 00:05:19.874
+86
+00:06:29.662 --> 00:06:33.862
 Ready for GovCloud. To plan a deployment,
 contact Infinitech.

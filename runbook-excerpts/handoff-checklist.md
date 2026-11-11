@@ -144,9 +144,10 @@ Known on 2026-11-02; add anything found since:
   tunnel off (`node_ssm_tunnel`) where operators reach the API another way.
 - [ ] Chaos Mesh drills run only on the Airflow alternative; the default
   Step Functions path has the forced-failure drills (`make demo-chaos`).
-- [ ] Upstream IMCLZ gaps:
-  #178
-  (GovCloud accounts and regions) and
+- [ ] Upstream IMCLZ: as of the pinned commit `84a1907`, vending can create
+  GovCloud account pairs and the region list allows `us-gov-west-1` and
+  `us-gov-east-1`.
+  Both are validated offline and haven't run live. Still open:
   #186
   (Azure Government workspace).
 

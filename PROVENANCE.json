@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "release": "0.2.0",
+  "release": "0.3.0",
   "profile": "public-reference-evidence",
   "source": {
     "product": "Infinitech Regulated Data Platform",
     "repository_visibility": "private",
-    "product_commit": "bd309bdf611ca9640ccfbf90c7dc16cac390ec2f"
+    "product_commit": "971d6f61a54e6a4dce00aa879d2a3a65645ed1ae"
   },
-  "builder_sha256": "c234dabbe5bc0f19e76b08b230a2e77eb5b1b21d5970f63d3ebde9a549172d39",
+  "builder_sha256": "5db0b43a8f05d97a97dddf6ff6772afec2774edb26d87c47c61a60a3dfc4d22a",
   "implementation_included": false
 }

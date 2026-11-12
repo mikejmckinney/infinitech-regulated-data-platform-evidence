@@ -12,7 +12,7 @@ with a customer engagement.
 ## The 15-minute evidence path
 
 1. Watch the [hero](https://media.infinitechplatforms.com/irdp/v1/irdp-hero.mp4)
-   and the [walkthrough](https://media.infinitechplatforms.com/irdp/v1/irdp-walkthrough.mp4).
+   and the [walkthrough](https://media.infinitechplatforms.com/irdp/v2/irdp-walkthrough.mp4).
    [`media/`](media/) has their transcripts and captions.
 2. Read the [architecture](docs/architecture.md) and the
    [design decisions](docs/design-decisions.md).
@@ -68,7 +68,9 @@ with a customer engagement.
 
 All but the last row are from demo cycle 15, 2026-11-03 to 11-04, in a
 commercial AWS demo account. [`evidence/results.md`](evidence/results.md)
-has the earlier cycles.
+has the earlier cycles. The walkthrough's "Deletion and erasure" and
+"Alerting" chapters were recorded on cycle 16, 2026-11-06 to 11-07; this
+package doesn't hold that cycle's records yet.
 
 | Claim in the walkthrough | Record |
 | --- | --- |
